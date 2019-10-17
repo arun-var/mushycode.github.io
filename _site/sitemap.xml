@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts...</title>
+    <description>My Posts</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/sitemap.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 17 Oct 2019 16:44:27 +0530</pubDate>
+    <lastBuildDate>Thu, 17 Oct 2019 16:44:27 +0530</lastBuildDate>
+    <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>How to remove file in linux using regex</title>
+        <description>&lt;h4 id=&quot;deleting-older-files-with-names-usually-having-date-as-prefixsuffix&quot;&gt;Deleting older files with names usually having date as prefix/suffix&lt;/h4&gt;
+
+&lt;p&gt;Generally compressed log files created by utilities contain a date in the filename.
+For cleaning such accumulated compressed files we can use &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; command with regex.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls
+
+2013-12-23-nginx.tar.gz                2016-04-29-nginx.tar.gz
+2013-12-24-nginx.tar.gz                2016-05-21-nginx.tar.gz
+2016-04-19-nginx.tar.gz                2016-05-22-nginx.tar.gz
+2016-04-20-nginx.tar.gz                2016-05-23-nginx.tar.gz
+2016-04-21-nginx.tar.gz                2016-05-24-nginx.tar.gz
+2016-04-22-nginx.tar.gz                2016-05-25-nginx.tar.gz
+2016-04-23-nginx.tar.gz                2016-06-11-nginx.tar.gz
+2016-04-24-nginx.tar.gz                2016-06-12-nginx.tar.gz
+2016-04-25-nginx.tar.gz                2016-06-13-nginx.tar.gz
+2016-04-26-nginx.tar.gz                2016-12-24-nginx.tar.gz
+2016-04-27-nginx.tar.gz                2019-07-20-nginx.tar.gz
+2016-04-28-nginx.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ rm 201[3-6]*&lt;/code&gt;&lt;/p&gt;
+</description>
+        <pubDate>Sat, 20 Jul 2019 04:50:00 +0530</pubDate>
+        <link>http://localhost:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html</link>
+        <guid isPermaLink="true">http://localhost:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html</guid>
+        
+        
+        <category>linux</category>
+        
+        <category>remove</category>
+        
+        <category>delete</category>
+        
+        <category>files</category>
+        
+        <category>rm</category>
+        
+        <category>regex</category>
+        
+      </item>
+    
+  </channel>
+</rss>
