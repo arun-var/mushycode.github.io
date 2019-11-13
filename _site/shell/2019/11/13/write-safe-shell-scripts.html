@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/static/img/favicon.ico" />
-    <title>How to remove file in linux using regex - Posts...</title>
+    <title>How to write safe shell scripts - Posts...</title>
     <meta name="author" content="Arun Varghese" />
-    <meta name="description" content="How to remove file in linux using regex" />
-    <meta name="keywords" content="How to remove file in linux using regex, Posts..., linux, remove, delete, files, rm, regex" />
+    <meta name="description" content="How to write safe shell scripts" />
+    <meta name="keywords" content="How to write safe shell scripts, Posts..., shell" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
     <meta content="1749788565247320" property="fb:app_id">
     <meta content="Posts..." property="og:site_name">
@@ -16,7 +16,7 @@
     
 
     
-      <meta content="How to remove file in linux using regex" property="og:title">
+      <meta content="How to write safe shell scripts" property="og:title">
       <meta content="article" property="og:type">
     
 
@@ -25,11 +25,11 @@
     
 
     
-      <meta content="http://localhost:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html" property="og:url">
+      <meta content="http://localhost:4000/shell/2019/11/13/write-safe-shell-scripts.html" property="og:url">
     
 
     
-      <meta content="2019-07-20T04:50:00+05:30" property="article:published_time">
+      <meta content="2019-11-13T21:22:57+05:30" property="article:published_time">
       <meta content="http://localhost:4000/about/" property="article:author">
     
 
@@ -37,7 +37,7 @@
 
     
       
-        <meta content="linux" property="article:section">
+        <meta content="shell" property="article:section">
       
     
 
@@ -50,11 +50,11 @@
     <meta name="twitter:creator" content="@github.io">
 
     
-      <meta name="twitter:title" content="How to remove file in linux using regex">
+      <meta name="twitter:title" content="How to write safe shell scripts">
     
 
     
-      <meta name="twitter:url" content="http://localhost:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html">
+      <meta name="twitter:url" content="http://localhost:4000/shell/2019/11/13/write-safe-shell-scripts.html">
     
 
     
@@ -125,39 +125,165 @@
       </div>
       <div class="col-sm-8 col-offset-1 main-layout">
         <header class="post-header">
-  <h1 class="post-title">How to remove file in linux using regex</h1>
+  <h1 class="post-title">How to write safe shell scripts</h1>
 </header>
 
-<span class="time">20 Jul 2019</span>
+<span class="time">13 Nov 2019</span>
 
   <span class="categories">
-    &raquo; <a href="/category/linux">linux</a>, <a href="/category/remove">remove</a>, <a href="/category/delete">delete</a>, <a href="/category/files">files</a>, <a href="/category/rm">rm</a>, <a href="/category/regex">regex</a>
+    &raquo; <a href="/category/shell">shell</a>
   </span>
 
 
 <div class="content">
-  <div class="post"><h4 id="deleting-older-files-with-names-usually-having-date-as-prefixsuffix">Deleting older files with names usually having date as prefix/suffix</h4>
+  <div class="post"><h4 id="shebang-">Shebang (#!)</h4>
 
-<p>Generally compressed log files created by utilities contain a date in the filename.
-For cleaning such accumulated compressed files we can use <code class="highlighter-rouge">rm</code> command with regex.</p>
+<p>It is called a shebang or a “bang” line. It is nothing but the absolute path to the Bash interpreter. It consists of a number sign and an exclamation point character (#!), followed by the full path to the interpreter such as /bin/bash. All scripts under Linux execute using the interpreter specified on a first line.
+This ensures that Bash will be used to interpret the script, even if it is executed under another shell.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ls
+<h4 id="set--e">set -e</h4>
 
-2013-12-23-nginx.tar.gz                2016-04-29-nginx.tar.gz
-2013-12-24-nginx.tar.gz                2016-05-21-nginx.tar.gz
-2016-04-19-nginx.tar.gz                2016-05-22-nginx.tar.gz
-2016-04-20-nginx.tar.gz                2016-05-23-nginx.tar.gz
-2016-04-21-nginx.tar.gz                2016-05-24-nginx.tar.gz
-2016-04-22-nginx.tar.gz                2016-05-25-nginx.tar.gz
-2016-04-23-nginx.tar.gz                2016-06-11-nginx.tar.gz
-2016-04-24-nginx.tar.gz                2016-06-12-nginx.tar.gz
-2016-04-25-nginx.tar.gz                2016-06-13-nginx.tar.gz
-2016-04-26-nginx.tar.gz                2016-12-24-nginx.tar.gz
-2016-04-27-nginx.tar.gz                2019-07-20-nginx.tar.gz
-2016-04-28-nginx.tar.gz
+<p>this will make the shell script exit as soon as any line in the bash script fails.
+for example, a shell file like below will execute every line</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ cat test.sh 
+true
+echo "true"
+true
+echo "true"
+false
+echo "false"
+true
+echo "true"
+
+arun@home:~$ ./test.sh 
+true
+true
+false
+true
+</code></pre></div></div>
+<p>After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ cat test.sh 
+set -e
+true
+echo "true"
+true
+echo "true"
+false
+echo "false"
+true
+echo "true"
+arun@home:~$ ./test.sh 
+true
+true
+</code></pre></div></div>
+<p>if we don’t want the script to fail after certain failing statements, we can append these certain statements with || true.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ cat test.sh           
+set -e
+true
+echo "true"
+true
+echo "true"
+false || true
+echo "false was ignored"
+true
+echo "true"
+arun@home:~$ ./test.sh           
+true
+true
+false was ignored
+true
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">$ rm 201[3-6]*</code></p>
+<h4 id="set--x">set -x</h4>
+
+<p>this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ cat test.sh           
+set -xe
+true
+echo "true"
+true
+echo "true"
+false
+echo "false"
+true
+echo "true"
+arun@home:~$ ./test.sh           
+++ true
+++ echo true
+true
+++ true
+++ echo true
+true
+++ false
+</code></pre></div></div>
+
+<h4 id="set--u">set -u</h4>
+
+<p>this option will force bash to treat unset variables as an error and exit immediately.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ cat test.sh 
+set -xe
+a=0
+echo $a
+echo $a
+echo $b
+echo $a
+arun@home:~$ ./test.sh 
+++ a=0
+++ echo 0
+0
+++ echo 0
+0
+++ echo
+
+++ echo 0
+0
+
+arun@home:~$ cat test.sh
+set -xeu
+a=0
+echo $a
+echo $a
+echo $b
+echo $a
+arun@home:~$ ./test.sh 
+++ a=0
+++ echo 0
+0
+++ echo 0
+0
+./test.sh: line 5: b: unbound variable
+</code></pre></div></div>
+
+<h4 id="set--o-pipefail">set -o pipefail</h4>
+
+<p>bash usually looks at the exit code of the last command in a pipeline. This can cause a problem for -e option as it will only consider the leftmost command’s exit code in a pipeline.
+This particular option sets the exit code of pipeline commands to that of the rightmost command to exit with a non-zero status or 0 if all exit successfully.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ cat test.sh 
+set -xeu
+echo $a || echo "pipe chain failed"
+echo "but I execute"
+arun@home:~$ ./test.sh 
+./test.sh: line 3: a: unbound variable
+++ echo 'pipe chain failed'
+pipe chain failed
+++ echo 'but I execute'
+but I execute
+
+arun@home:~$ cat test.sh           
+set -xeuo pipefail
+echo $a || echo "pipe chain failed"
+echo "but I execute"
+arun@home:~$ echo $?
+0
+arunvarghese@kreatio:~$ ./test.sh 
+./test.sh: line 3: a: unbound variable
+++ echo 'pipe chain failed'
+pipe chain failed
+arun@home:~$ echo $?
+1
+</code></pre></div></div>
+<p>the echo $? is a special variable in bash that shows the exit code of last run command.</p>
+
 </div>
   <div class="share-page">
   <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
@@ -167,7 +293,7 @@ For cleaning such accumulated compressed files we can use <code class="highlight
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
   <!-- Facebook -->
-  <div class="fb-share-button" data-href="http://localhost:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+  <div class="fb-share-button" data-href="http://localhost:4000/shell/2019/11/13/write-safe-shell-scripts.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
 </div>
 
 <div id="fb-root"></div>
@@ -188,16 +314,6 @@ For cleaning such accumulated compressed files we can use <code class="highlight
         
           
       
-          
-      
-          
-      
-          
-      
-          
-      
-          
-      
     
   
     
@@ -205,84 +321,24 @@ For cleaning such accumulated compressed files we can use <code class="highlight
         
           
       
-          
-      
-          
-      
-          
-      
-          
-      
+    
+        
           
       
     
         
           
       
-          
-      
-          
-      
-          
-      
-          
-      
+    
+        
           
       
     
         
           
       
-          
-      
-          
-      
-          
-      
-          
-      
-          
-      
     
         
-          
-      
-          
-      
-          
-      
-          
-      
-          
-      
-          
-      
-    
-        
-          
-      
-          
-      
-          
-      
-          
-      
-          
-      
-          
-      
-    
-        
-          
-      
-          
-      
-          
-      
-          
-      
-          
-      
           
       
     
@@ -291,8 +347,8 @@ For cleaning such accumulated compressed files we can use <code class="highlight
 
 <div class="PageNavigation">
   
+    <a class="prev" href="/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html">&laquo; How to remove file in linux using regex</a>
   
-    <a class="next" href="/shell/2019/11/13/write-safe-shell-scripts.html">How to write safe shell scripts &raquo;</a>
   
 </div>
 
@@ -301,8 +357,8 @@ For cleaning such accumulated compressed files we can use <code class="highlight
   <script type="text/javascript">
     /* <![CDATA[ */
     var disqus_shortname = "myposts";
-    var disqus_identifier = "http://localhost:4000_How to remove file in linux using regex";
-    var disqus_title = "How to remove file in linux using regex";
+    var disqus_identifier = "http://localhost:4000_How to write safe shell scripts";
+    var disqus_title = "How to write safe shell scripts";
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {

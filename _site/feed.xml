@@ -5,9 +5,169 @@
     <description>My Posts</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 17 Oct 2019 16:55:25 +0530</pubDate>
-    <lastBuildDate>Thu, 17 Oct 2019 16:55:25 +0530</lastBuildDate>
+    <pubDate>Wed, 13 Nov 2019 23:54:01 +0530</pubDate>
+    <lastBuildDate>Wed, 13 Nov 2019 23:54:01 +0530</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>How to write safe shell scripts</title>
+        <description>&lt;h4 id=&quot;shebang-&quot;&gt;Shebang (#!)&lt;/h4&gt;
+
+&lt;p&gt;It is called a shebang or a “bang” line. It is nothing but the absolute path to the Bash interpreter. It consists of a number sign and an exclamation point character (#!), followed by the full path to the interpreter such as /bin/bash. All scripts under Linux execute using the interpreter specified on a first line.
+This ensures that Bash will be used to interpret the script, even if it is executed under another shell.&lt;/p&gt;
+
+&lt;h4 id=&quot;set--e&quot;&gt;set -e&lt;/h4&gt;
+
+&lt;p&gt;this will make the shell script exit as soon as any line in the bash script fails.
+for example, a shell file like below will execute every line&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh 
+true
+echo &quot;true&quot;
+true
+echo &quot;true&quot;
+false
+echo &quot;false&quot;
+true
+echo &quot;true&quot;
+
+arun@home:~$ ./test.sh 
+true
+true
+false
+true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh 
+set -e
+true
+echo &quot;true&quot;
+true
+echo &quot;true&quot;
+false
+echo &quot;false&quot;
+true
+echo &quot;true&quot;
+arun@home:~$ ./test.sh 
+true
+true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;if we don’t want the script to fail after certain failing statements, we can append these certain statements with || true.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh           
+set -e
+true
+echo &quot;true&quot;
+true
+echo &quot;true&quot;
+false || true
+echo &quot;false was ignored&quot;
+true
+echo &quot;true&quot;
+arun@home:~$ ./test.sh           
+true
+true
+false was ignored
+true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;set--x&quot;&gt;set -x&lt;/h4&gt;
+
+&lt;p&gt;this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh           
+set -xe
+true
+echo &quot;true&quot;
+true
+echo &quot;true&quot;
+false
+echo &quot;false&quot;
+true
+echo &quot;true&quot;
+arun@home:~$ ./test.sh           
+++ true
+++ echo true
+true
+++ true
+++ echo true
+true
+++ false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;set--u&quot;&gt;set -u&lt;/h4&gt;
+
+&lt;p&gt;this option will force bash to treat unset variables as an error and exit immediately.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh 
+set -xe
+a=0
+echo $a
+echo $a
+echo $b
+echo $a
+arun@home:~$ ./test.sh 
+++ a=0
+++ echo 0
+0
+++ echo 0
+0
+++ echo
+
+++ echo 0
+0
+
+arun@home:~$ cat test.sh
+set -xeu
+a=0
+echo $a
+echo $a
+echo $b
+echo $a
+arun@home:~$ ./test.sh 
+++ a=0
+++ echo 0
+0
+++ echo 0
+0
+./test.sh: line 5: b: unbound variable
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;set--o-pipefail&quot;&gt;set -o pipefail&lt;/h4&gt;
+
+&lt;p&gt;bash usually looks at the exit code of the last command in a pipeline. This can cause a problem for -e option as it will only consider the leftmost command’s exit code in a pipeline.
+This particular option sets the exit code of pipeline commands to that of the rightmost command to exit with a non-zero status or 0 if all exit successfully.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh 
+set -xeu
+echo $a || echo &quot;pipe chain failed&quot;
+echo &quot;but I execute&quot;
+arun@home:~$ ./test.sh 
+./test.sh: line 3: a: unbound variable
+++ echo 'pipe chain failed'
+pipe chain failed
+++ echo 'but I execute'
+but I execute
+
+arun@home:~$ cat test.sh           
+set -xeuo pipefail
+echo $a || echo &quot;pipe chain failed&quot;
+echo &quot;but I execute&quot;
+arun@home:~$ echo $?
+0
+arunvarghese@kreatio:~$ ./test.sh 
+./test.sh: line 3: a: unbound variable
+++ echo 'pipe chain failed'
+pipe chain failed
+arun@home:~$ echo $?
+1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;the echo $? is a special variable in bash that shows the exit code of last run command.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 13 Nov 2019 21:22:57 +0530</pubDate>
+        <link>http://localhost:4000/shell/2019/11/13/write-safe-shell-scripts.html</link>
+        <guid isPermaLink="true">http://localhost:4000/shell/2019/11/13/write-safe-shell-scripts.html</guid>
+        
+        
+        <category>shell</category>
+        
+      </item>
     
       <item>
         <title>How to remove file in linux using regex</title>
