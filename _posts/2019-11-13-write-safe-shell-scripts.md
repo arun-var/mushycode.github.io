@@ -101,7 +101,7 @@ but I execute
 
 {% gist c3016ad398b86686d737f042298aac80 %}
 ```
-arunvarghese@kreatio:~$ ./with_pipefail.sh 
+arun@home:~$ ./with_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
