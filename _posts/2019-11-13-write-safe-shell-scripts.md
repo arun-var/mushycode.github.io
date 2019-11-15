@@ -14,73 +14,37 @@ This ensures that Bash will be used to interpret the script, even if it is execu
 
 this will make the shell script exit as soon as any line in the bash script fails.
 for example, a shell file like below will execute every line
+{% gist 501d903a4db01b5bcbf4e59e7ecae7c2 %}
 ```
-arun@home:~$ cat test.sh 
-true
-echo "true"
-true
-echo "true"
-false
-echo "false"
-true
-echo "true"
-
-arun@home:~$ ./test.sh 
+arun@home:~$ ./set_e_without.sh 
 true
 true
 false
 true
 ```
 After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.
+{% gist 9d841d3cc79224faf16f8fc602799372 %}
 ```
-arun@home:~$ cat test.sh 
-set -e
-true
-echo "true"
-true
-echo "true"
-false
-echo "false"
-true
-echo "true"
-arun@home:~$ ./test.sh 
+arun@home:~$ ./with_set_e.sh 
 true
 true
 ```
 if we don't want the script to fail after certain failing statements, we can append these certain statements with || true.
+{% gist 1531d5db9b2bd6f0b3aa98c7d73cd044 %}
 ```
-arun@home:~$ cat test.sh           
-set -e
-true
-echo "true"
-true
-echo "true"
-false || true
-echo "false was ignored"
-true
-echo "true"
-arun@home:~$ ./test.sh           
+arun@home:~$ ./with_set_e_and_ignore_fail.sh           
 true
 true
-false was ignored
+failing foo was ignored
 true
 ```
 
 #### set -x
 
 this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like
+{% gist a9c92e43f02fd4c65514bb63fb05dce4 %}
 ```
-arun@home:~$ cat test.sh           
-set -xe
-true
-echo "true"
-true
-echo "true"
-false
-echo "false"
-true
-echo "true"
-arun@home:~$ ./test.sh           
+arun@home:~$ ./with_set_x.sh           
 ++ true
 ++ echo true
 true
@@ -93,15 +57,9 @@ true
 #### set -u
 
 this option will force bash to treat unset variables as an error and exit immediately.
+{% gist a9b2414088f39537cbd6e168e9e716f6 %}
 ```
-arun@home:~$ cat test.sh 
-set -xe
-a=0
-echo $a
-echo $a
-echo $b
-echo $a
-arun@home:~$ ./test.sh 
+arun@home:~$ ./without_set_u.sh 
 ++ a=0
 ++ echo 0
 0
@@ -111,49 +69,43 @@ arun@home:~$ ./test.sh
 
 ++ echo 0
 0
+```
 
-arun@home:~$ cat test.sh
-set -xeu
-a=0
-echo $a
-echo $a
-echo $b
-echo $a
-arun@home:~$ ./test.sh 
+{% gist ca24e436660a986cbd58d9b22f113ce2 %}
+
+```
+arun@home:~$ ./with_set_u.sh 
 ++ a=0
 ++ echo 0
 0
 ++ echo 0
 0
-./test.sh: line 5: b: unbound variable
+./with_set_u.sh: line 5: b: unbound variable
 ```
 
 #### set -o pipefail
 
 bash usually looks at the exit code of the last command in a pipeline. This can cause a problem for -e option as it will only consider the leftmost command's exit code in a pipeline.
 This particular option sets the exit code of pipeline commands to that of the rightmost command to exit with a non-zero status or 0 if all exit successfully.
+
+{% gist 5df45b0e6c32925c6ffd927c77b16900 %}
+
 ```
-arun@home:~$ cat test.sh 
-set -xeu
-echo $a || echo "pipe chain failed"
-echo "but I execute"
-arun@home:~$ ./test.sh 
+arun@home:~$ ./without_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
 ++ echo 'but I execute'
 but I execute
+```
 
-arun@home:~$ cat test.sh           
-set -xeuo pipefail
-echo $a || echo "pipe chain failed"
-echo "but I execute"
-arun@home:~$ echo $?
-0
-arunvarghese@kreatio:~$ ./test.sh 
+{% gist c3016ad398b86686d737f042298aac80 %}
+```
+arunvarghese@kreatio:~$ ./with_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
+
 arun@home:~$ echo $?
 1
 ```

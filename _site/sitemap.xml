@@ -5,8 +5,8 @@
     <description>My Posts</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/sitemap.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 13 Nov 2019 23:54:01 +0530</pubDate>
-    <lastBuildDate>Wed, 13 Nov 2019 23:54:01 +0530</lastBuildDate>
+    <pubDate>Fri, 15 Nov 2019 12:53:57 +0530</pubDate>
+    <lastBuildDate>Fri, 15 Nov 2019 12:53:57 +0530</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
@@ -19,70 +19,34 @@ This ensures that Bash will be used to interpret the script, even if it is execu
 &lt;h4 id=&quot;set--e&quot;&gt;set -e&lt;/h4&gt;
 
 &lt;p&gt;this will make the shell script exit as soon as any line in the bash script fails.
-for example, a shell file like below will execute every line&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh 
-true
-echo &quot;true&quot;
-true
-echo &quot;true&quot;
-false
-echo &quot;false&quot;
-true
-echo &quot;true&quot;
-
-arun@home:~$ ./test.sh 
+for example, a shell file like below will execute every line
+&lt;script src=&quot;https://gist.github.com/501d903a4db01b5bcbf4e59e7ecae7c2.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./set_e_without.sh 
 true
 true
 false
 true
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh 
-set -e
-true
-echo &quot;true&quot;
-true
-echo &quot;true&quot;
-false
-echo &quot;false&quot;
-true
-echo &quot;true&quot;
-arun@home:~$ ./test.sh 
+&lt;p&gt;After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.
+&lt;script src=&quot;https://gist.github.com/9d841d3cc79224faf16f8fc602799372.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_e.sh 
 true
 true
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;if we don’t want the script to fail after certain failing statements, we can append these certain statements with || true.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh           
-set -e
-true
-echo &quot;true&quot;
-true
-echo &quot;true&quot;
-false || true
-echo &quot;false was ignored&quot;
-true
-echo &quot;true&quot;
-arun@home:~$ ./test.sh           
+&lt;p&gt;if we don’t want the script to fail after certain failing statements, we can append these certain statements with || true.
+&lt;script src=&quot;https://gist.github.com/1531d5db9b2bd6f0b3aa98c7d73cd044.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_e_and_ignore_fail.sh           
 true
 true
-false was ignored
+failing foo was ignored
 true
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h4 id=&quot;set--x&quot;&gt;set -x&lt;/h4&gt;
 
-&lt;p&gt;this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh           
-set -xe
-true
-echo &quot;true&quot;
-true
-echo &quot;true&quot;
-false
-echo &quot;false&quot;
-true
-echo &quot;true&quot;
-arun@home:~$ ./test.sh           
+&lt;p&gt;this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like
+&lt;script src=&quot;https://gist.github.com/a9c92e43f02fd4c65514bb63fb05dce4.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_x.sh           
 ++ true
 ++ echo true
 true
@@ -94,15 +58,9 @@ true
 
 &lt;h4 id=&quot;set--u&quot;&gt;set -u&lt;/h4&gt;
 
-&lt;p&gt;this option will force bash to treat unset variables as an error and exit immediately.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh 
-set -xe
-a=0
-echo $a
-echo $a
-echo $b
-echo $a
-arun@home:~$ ./test.sh 
+&lt;p&gt;this option will force bash to treat unset variables as an error and exit immediately.
+&lt;script src=&quot;https://gist.github.com/a9b2414088f39537cbd6e168e9e716f6.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./without_set_u.sh 
 ++ a=0
 ++ echo 0
 0
@@ -112,48 +70,41 @@ arun@home:~$ ./test.sh
 
 ++ echo 0
 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-arun@home:~$ cat test.sh
-set -xeu
-a=0
-echo $a
-echo $a
-echo $b
-echo $a
-arun@home:~$ ./test.sh 
+&lt;script src=&quot;https://gist.github.com/ca24e436660a986cbd58d9b22f113ce2.js&quot;&gt; &lt;/script&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_u.sh 
 ++ a=0
 ++ echo 0
 0
 ++ echo 0
 0
-./test.sh: line 5: b: unbound variable
+./with_set_u.sh: line 5: b: unbound variable
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h4 id=&quot;set--o-pipefail&quot;&gt;set -o pipefail&lt;/h4&gt;
 
 &lt;p&gt;bash usually looks at the exit code of the last command in a pipeline. This can cause a problem for -e option as it will only consider the leftmost command’s exit code in a pipeline.
 This particular option sets the exit code of pipeline commands to that of the rightmost command to exit with a non-zero status or 0 if all exit successfully.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ cat test.sh 
-set -xeu
-echo $a || echo &quot;pipe chain failed&quot;
-echo &quot;but I execute&quot;
-arun@home:~$ ./test.sh 
+
+&lt;script src=&quot;https://gist.github.com/5df45b0e6c32925c6ffd927c77b16900.js&quot;&gt; &lt;/script&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./without_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
 ++ echo 'but I execute'
 but I execute
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-arun@home:~$ cat test.sh           
-set -xeuo pipefail
-echo $a || echo &quot;pipe chain failed&quot;
-echo &quot;but I execute&quot;
-arun@home:~$ echo $?
-0
-arunvarghese@kreatio:~$ ./test.sh 
+&lt;script src=&quot;https://gist.github.com/c3016ad398b86686d737f042298aac80.js&quot;&gt; &lt;/script&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arunvarghese@kreatio:~$ ./with_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
+
 arun@home:~$ echo $?
 1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
