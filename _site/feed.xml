@@ -3,11 +3,100 @@
   <channel>
     <title>Posts...</title>
     <description>My Posts</description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 15 Nov 2019 12:53:57 +0530</pubDate>
-    <lastBuildDate>Fri, 15 Nov 2019 12:53:57 +0530</lastBuildDate>
+    <link>http://0.0.0.0:4000/</link>
+    <atom:link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 10 Dec 2019 17:15:33 +0530</pubDate>
+    <lastBuildDate>Tue, 10 Dec 2019 17:15:33 +0530</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>Understanding docker layers and overlay filesystem</title>
+        <description>&lt;p&gt;This was one of the things that I wanted to understand better - What exactly is an overlay file system and how is docker using it.
+From archlinux wiki definition
+“Overlayfs allows one, usually read-write, directory tree to be overlaid onto another, read-only directory tree. All modifications go to the upper, writable layer.”&lt;/p&gt;
+
+&lt;p&gt;An apt example is a linux live CD.&lt;/p&gt;
+
+&lt;p&gt;Lets get down to how this overlay file system works&lt;/p&gt;
+
+&lt;p&gt;It consists of three layers for the sake of simplicity.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Lower Read Only Layer&lt;/li&gt;
+  &lt;li&gt;Upper Layer that allows read and write&lt;/li&gt;
+  &lt;li&gt;The Overlay layer itself that gives the user entire view of the filesystem and from where user actually reads a file or writes to them.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;lower-layer&quot;&gt;Lower Layer&lt;/h4&gt;
+&lt;p&gt;The read only layer where base files of the filesystem are stored. It can be visualized as the base image of our docker image or root of a live CD example.&lt;/p&gt;
+
+&lt;h4 id=&quot;upper-layer&quot;&gt;Upper Layer&lt;/h4&gt;
+&lt;p&gt;Any changes made in the overlay layer gets stored in the upper layer. Whenever a process reads a file from the overlay layer, it is checked in upper layer first, if not available it is read from the lower layer.&lt;/p&gt;
+
+&lt;h4 id=&quot;overlay&quot;&gt;Overlay&lt;/h4&gt;
+&lt;p&gt;This is the consolidated or union view of lower and upper layers and where the user works on. Whenever any changes are made to a file, overlay layer presents the union of upper and lower layers such that files in upper layer supersede the ones in lower layer.&lt;/p&gt;
+
+&lt;p&gt;When objects with the same name exist in both directory trees of upper and lower layers, then their treatment depends on the object type:&lt;/p&gt;
+
+&lt;p&gt;File: We see the file in the upper layer, and the file in the lower layer is hidden.&lt;/p&gt;
+
+&lt;p&gt;Directory: content of both upper and lower layers of the directory tree is combined and shown in the overlay&lt;/p&gt;
+
+&lt;h4 id=&quot;copy-on-write&quot;&gt;Copy-on-Write&lt;/h4&gt;
+&lt;p&gt;Whenever a file already present in lower layer is modified, the file is first copied over to the upper layer and then the modifications are made here.&lt;/p&gt;
+
+&lt;h4 id=&quot;overlay-in-action&quot;&gt;Overlay in action&lt;/h4&gt;
+
+&lt;p&gt;Lets create directories&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# mkdir lower upper merged workdir
+root@dd4a4d50aefc:~# echo &quot;I am in lower layer&quot; &amp;gt; lower/lower.txt
+root@dd4a4d50aefc:~# echo &quot;I am in upper layer&quot; &amp;gt; upper/upper.txt
+root@dd4a4d50aefc:~# echo &quot;I am common file lower layer&quot; &amp;gt; lower/common.txt
+root@dd4a4d50aefc:~# echo &quot;I am common file upper layer&quot; &amp;gt; upper/common.txt
+root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower,upperdir=/root/upper,workdir=/root/workdir /root/merged
+root@dd4a4d50aefc:~# ls merged/
+common.txt  lower.txt  upper.txt
+root@dd4a4d50aefc:~# cat merged/common.txt 
+I am common file upper layer
+root@dd4a4d50aefc:~# ls lower/
+common.txt  lower.txt
+root@dd4a4d50aefc:~# ls upper/
+common.txt  upper.txt
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The lower layer can be read-only and an overlay itself, while the upper layer is normally writeable. In order to create an overlay of two directories, dir1 and dir2, we can use the following mount command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower2:/root/lower1,upperdir=/root/upper,workdir=/root/workdir /root/merged
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;while specifying multiple lower layers, they are separated by a :, with the rightmost lower directory on the bottom, and the leftmost lower directory on the top of the overlay.&lt;/p&gt;
+
+&lt;h4 id=&quot;new-file-creation-in-overlay&quot;&gt;New file creation in overlay&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# echo &quot;I am the new file on the block&quot; &amp;gt; merged/new.txt
+root@dd4a4d50aefc:~# ls merged/
+common.txt  lower.txt  new.txt  upper.txt
+root@dd4a4d50aefc:~# ls upper/
+common.txt  new.txt  upper.txt
+root@dd4a4d50aefc:~# ls lower/
+common.txt  lower.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;References&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;https://docs.docker.com/storage/storagedriver/#images-and-layers&lt;/li&gt;
+  &lt;li&gt;https://wiki.archlinux.org/index.php/Overlay_filesystem&lt;/li&gt;
+  &lt;li&gt;https://www.kernel.org/doc/Documentation/filesystems/overlayfs.txt&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 19 Nov 2019 18:17:46 +0530</pubDate>
+        <link>http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</guid>
+        
+        
+        <category>docker</category>
+        
+      </item>
     
       <item>
         <title>How to write safe shell scripts</title>
@@ -100,7 +189,7 @@ but I execute
 
 &lt;script src=&quot;https://gist.github.com/c3016ad398b86686d737f042298aac80.js&quot;&gt; &lt;/script&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arunvarghese@kreatio:~$ ./with_pipefail.sh 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
@@ -112,8 +201,8 @@ arun@home:~$ echo $?
 
 </description>
         <pubDate>Wed, 13 Nov 2019 21:22:57 +0530</pubDate>
-        <link>http://localhost:4000/shell/2019/11/13/write-safe-shell-scripts.html</link>
-        <guid isPermaLink="true">http://localhost:4000/shell/2019/11/13/write-safe-shell-scripts.html</guid>
+        <link>http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html</guid>
         
         
         <category>shell</category>
@@ -146,8 +235,8 @@ For cleaning such accumulated compressed files we can use &lt;code class=&quot;h
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ rm 201[3-6]*&lt;/code&gt;&lt;/p&gt;
 </description>
         <pubDate>Sat, 20 Jul 2019 04:50:00 +0530</pubDate>
-        <link>http://localhost:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html</link>
-        <guid isPermaLink="true">http://localhost:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html</guid>
+        <link>http://0.0.0.0:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html</guid>
         
         
         <category>linux</category>

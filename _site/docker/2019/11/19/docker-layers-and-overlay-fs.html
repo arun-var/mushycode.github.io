@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/static/img/favicon.ico" />
     <meta name="google-site-verification" content="VjtiqxmluyG8l1D-SJ1wnHyHhCkFezd088QnIKvmbsk" />
-    <title>How to write safe shell scripts - Posts...</title>
+    <title>Understanding docker layers and overlay filesystem - Posts...</title>
     <meta name="author" content="Arun Varghese" />
-    <meta name="description" content="How to write safe shell scripts" />
-    <meta name="keywords" content="How to write safe shell scripts, Posts..., shell" />
+    <meta name="description" content="Understanding docker layers and overlay filesystem" />
+    <meta name="keywords" content="Understanding docker layers and overlay filesystem, Posts..., docker" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
     <meta content="1749788565247320" property="fb:app_id">
     <meta content="Posts..." property="og:site_name">
@@ -17,7 +17,7 @@
     
 
     
-      <meta content="How to write safe shell scripts" property="og:title">
+      <meta content="Understanding docker layers and overlay filesystem" property="og:title">
       <meta content="article" property="og:type">
     
 
@@ -26,11 +26,11 @@
     
 
     
-      <meta content="http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html" property="og:url">
+      <meta content="http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html" property="og:url">
     
 
     
-      <meta content="2019-11-13T21:22:57+05:30" property="article:published_time">
+      <meta content="2019-11-19T18:17:46+05:30" property="article:published_time">
       <meta content="http://0.0.0.0:4000/about/" property="article:author">
     
 
@@ -38,7 +38,7 @@
 
     
       
-        <meta content="shell" property="article:section">
+        <meta content="docker" property="article:section">
       
     
 
@@ -51,11 +51,11 @@
     <meta name="twitter:creator" content="@github.io">
 
     
-      <meta name="twitter:title" content="How to write safe shell scripts">
+      <meta name="twitter:title" content="Understanding docker layers and overlay filesystem">
     
 
     
-      <meta name="twitter:url" content="http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html">
+      <meta name="twitter:url" content="http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html">
     
 
     
@@ -126,116 +126,94 @@
       </div>
       <div class="col-sm-8 col-offset-1 main-layout">
         <header class="post-header">
-  <h1 class="post-title">How to write safe shell scripts</h1>
+  <h1 class="post-title">Understanding docker layers and overlay filesystem</h1>
 </header>
 
-<span class="time">13 Nov 2019</span>
+<span class="time">19 Nov 2019</span>
 
   <span class="categories">
-    &raquo; <a href="/category/shell">shell</a>
+    &raquo; <a href="/category/docker">docker</a>
   </span>
 
 
 <div class="content">
-  <div class="post"><h4 id="shebang-">Shebang (#!)</h4>
+  <div class="post"><p>This was one of the things that I wanted to understand better - What exactly is an overlay file system and how is docker using it.
+From archlinux wiki definition
+“Overlayfs allows one, usually read-write, directory tree to be overlaid onto another, read-only directory tree. All modifications go to the upper, writable layer.”</p>
 
-<p>It is called a shebang or a “bang” line. It is nothing but the absolute path to the Bash interpreter. It consists of a number sign and an exclamation point character (#!), followed by the full path to the interpreter such as /bin/bash. All scripts under Linux execute using the interpreter specified on a first line.
-This ensures that Bash will be used to interpret the script, even if it is executed under another shell.</p>
+<p>An apt example is a linux live CD.</p>
 
-<h4 id="set--e">set -e</h4>
+<p>Lets get down to how this overlay file system works</p>
 
-<p>this will make the shell script exit as soon as any line in the bash script fails.
-for example, a shell file like below will execute every line
-<script src="https://gist.github.com/501d903a4db01b5bcbf4e59e7ecae7c2.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./set_e_without.sh 
-true
-true
-false
-true
+<p>It consists of three layers for the sake of simplicity.</p>
+
+<ul>
+  <li>Lower Read Only Layer</li>
+  <li>Upper Layer that allows read and write</li>
+  <li>The Overlay layer itself that gives the user entire view of the filesystem and from where user actually reads a file or writes to them.</li>
+</ul>
+
+<h4 id="lower-layer">Lower Layer</h4>
+<p>The read only layer where base files of the filesystem are stored. It can be visualized as the base image of our docker image or root of a live CD example.</p>
+
+<h4 id="upper-layer">Upper Layer</h4>
+<p>Any changes made in the overlay layer gets stored in the upper layer. Whenever a process reads a file from the overlay layer, it is checked in upper layer first, if not available it is read from the lower layer.</p>
+
+<h4 id="overlay">Overlay</h4>
+<p>This is the consolidated or union view of lower and upper layers and where the user works on. Whenever any changes are made to a file, overlay layer presents the union of upper and lower layers such that files in upper layer supersede the ones in lower layer.</p>
+
+<p>When objects with the same name exist in both directory trees of upper and lower layers, then their treatment depends on the object type:</p>
+
+<p>File: We see the file in the upper layer, and the file in the lower layer is hidden.</p>
+
+<p>Directory: content of both upper and lower layers of the directory tree is combined and shown in the overlay</p>
+
+<h4 id="copy-on-write">Copy-on-Write</h4>
+<p>Whenever a file already present in lower layer is modified, the file is first copied over to the upper layer and then the modifications are made here.</p>
+
+<h4 id="overlay-in-action">Overlay in action</h4>
+
+<p>Lets create directories</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# mkdir lower upper merged workdir
+root@dd4a4d50aefc:~# echo "I am in lower layer" &gt; lower/lower.txt
+root@dd4a4d50aefc:~# echo "I am in upper layer" &gt; upper/upper.txt
+root@dd4a4d50aefc:~# echo "I am common file lower layer" &gt; lower/common.txt
+root@dd4a4d50aefc:~# echo "I am common file upper layer" &gt; upper/common.txt
+root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower,upperdir=/root/upper,workdir=/root/workdir /root/merged
+root@dd4a4d50aefc:~# ls merged/
+common.txt  lower.txt  upper.txt
+root@dd4a4d50aefc:~# cat merged/common.txt 
+I am common file upper layer
+root@dd4a4d50aefc:~# ls lower/
+common.txt  lower.txt
+root@dd4a4d50aefc:~# ls upper/
+common.txt  upper.txt
+
 </code></pre></div></div>
-<p>After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.
-<script src="https://gist.github.com/9d841d3cc79224faf16f8fc602799372.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_e.sh 
-true
-true
+<p>The lower layer can be read-only and an overlay itself, while the upper layer is normally writeable. In order to create an overlay of two directories, dir1 and dir2, we can use the following mount command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower2:/root/lower1,upperdir=/root/upper,workdir=/root/workdir /root/merged
+
 </code></pre></div></div>
-<p>if we don’t want the script to fail after certain failing statements, we can append these certain statements with || true.
-<script src="https://gist.github.com/1531d5db9b2bd6f0b3aa98c7d73cd044.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_e_and_ignore_fail.sh           
-true
-true
-failing foo was ignored
-true
-</code></pre></div></div>
+<p>while specifying multiple lower layers, they are separated by a :, with the rightmost lower directory on the bottom, and the leftmost lower directory on the top of the overlay.</p>
 
-<h4 id="set--x">set -x</h4>
+<h4 id="new-file-creation-in-overlay">New file creation in overlay</h4>
 
-<p>this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like
-<script src="https://gist.github.com/a9c92e43f02fd4c65514bb63fb05dce4.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_x.sh           
-++ true
-++ echo true
-true
-++ true
-++ echo true
-true
-++ false
-</code></pre></div></div>
-
-<h4 id="set--u">set -u</h4>
-
-<p>this option will force bash to treat unset variables as an error and exit immediately.
-<script src="https://gist.github.com/a9b2414088f39537cbd6e168e9e716f6.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./without_set_u.sh 
-++ a=0
-++ echo 0
-0
-++ echo 0
-0
-++ echo
-
-++ echo 0
-0
-</code></pre></div></div>
-
-<script src="https://gist.github.com/ca24e436660a986cbd58d9b22f113ce2.js"> </script>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_u.sh 
-++ a=0
-++ echo 0
-0
-++ echo 0
-0
-./with_set_u.sh: line 5: b: unbound variable
-</code></pre></div></div>
-
-<h4 id="set--o-pipefail">set -o pipefail</h4>
-
-<p>bash usually looks at the exit code of the last command in a pipeline. This can cause a problem for -e option as it will only consider the leftmost command’s exit code in a pipeline.
-This particular option sets the exit code of pipeline commands to that of the rightmost command to exit with a non-zero status or 0 if all exit successfully.</p>
-
-<script src="https://gist.github.com/5df45b0e6c32925c6ffd927c77b16900.js"> </script>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./without_pipefail.sh 
-./test.sh: line 3: a: unbound variable
-++ echo 'pipe chain failed'
-pipe chain failed
-++ echo 'but I execute'
-but I execute
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# echo "I am the new file on the block" &gt; merged/new.txt
+root@dd4a4d50aefc:~# ls merged/
+common.txt  lower.txt  new.txt  upper.txt
+root@dd4a4d50aefc:~# ls upper/
+common.txt  new.txt  upper.txt
+root@dd4a4d50aefc:~# ls lower/
+common.txt  lower.txt
 </code></pre></div></div>
 
-<script src="https://gist.github.com/c3016ad398b86686d737f042298aac80.js"> </script>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_pipefail.sh 
-./test.sh: line 3: a: unbound variable
-++ echo 'pipe chain failed'
-pipe chain failed
-
-arun@home:~$ echo $?
-1
-</code></pre></div></div>
-<p>the echo $? is a special variable in bash that shows the exit code of last run command.</p>
-
+<p>References</p>
+<ul>
+  <li>https://docs.docker.com/storage/storagedriver/#images-and-layers</li>
+  <li>https://wiki.archlinux.org/index.php/Overlay_filesystem</li>
+  <li>https://www.kernel.org/doc/Documentation/filesystems/overlayfs.txt</li>
+</ul>
 </div>
   <div class="share-page">
   <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
@@ -245,7 +223,7 @@ arun@home:~$ echo $?
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
   <!-- Facebook -->
-  <div class="fb-share-button" data-href="http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+  <div class="fb-share-button" data-href="http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
 </div>
 
 <div id="fb-root"></div>
@@ -306,10 +284,8 @@ arun@home:~$ echo $?
 
 <div class="PageNavigation">
   
-    <a class="prev" href="/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html">&laquo; How to remove file in linux using regex</a>
+    <a class="prev" href="/shell/2019/11/13/write-safe-shell-scripts.html">&laquo; How to write safe shell scripts</a>
   
-  
-    <a class="next" href="/docker/2019/11/19/docker-layers-and-overlay-fs.html">Understanding docker layers and overlay filesystem &raquo;</a>
   
 </div>
 
@@ -318,8 +294,8 @@ arun@home:~$ echo $?
   <script type="text/javascript">
     /* <![CDATA[ */
     var disqus_shortname = "myposts";
-    var disqus_identifier = "http://0.0.0.0:4000_How to write safe shell scripts";
-    var disqus_title = "How to write safe shell scripts";
+    var disqus_identifier = "http://0.0.0.0:4000_Understanding docker layers and overlay filesystem";
+    var disqus_title = "Understanding docker layers and overlay filesystem";
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
