@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/static/img/favicon.ico" />
     <meta name="google-site-verification" content="VjtiqxmluyG8l1D-SJ1wnHyHhCkFezd088QnIKvmbsk" />
-    <title>Understanding docker layers and overlay filesystem - Posts...</title>
+    <title>Commonly used Elasticsearch REST APIs at work - Posts...</title>
     <meta name="author" content="Arun Varghese" />
-    <meta name="description" content="Understanding docker layers and overlay filesystem" />
-    <meta name="keywords" content="Understanding docker layers and overlay filesystem, Posts..., docker" />
+    <meta name="description" content="Commonly used Elasticsearch REST APIs at work" />
+    <meta name="keywords" content="Commonly used Elasticsearch REST APIs at work, Posts..., elasticsearch, rest" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
     <meta content="1749788565247320" property="fb:app_id">
     <meta content="Posts..." property="og:site_name">
@@ -17,7 +17,7 @@
     
 
     
-      <meta content="Understanding docker layers and overlay filesystem" property="og:title">
+      <meta content="Commonly used Elasticsearch REST APIs at work" property="og:title">
       <meta content="article" property="og:type">
     
 
@@ -26,11 +26,11 @@
     
 
     
-      <meta content="http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html" property="og:url">
+      <meta content="http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html" property="og:url">
     
 
     
-      <meta content="2019-11-19T18:17:46+05:30" property="article:published_time">
+      <meta content="2020-05-13T18:43:55+05:30" property="article:published_time">
       <meta content="http://0.0.0.0:4000/about/" property="article:author">
     
 
@@ -38,7 +38,7 @@
 
     
       
-        <meta content="docker" property="article:section">
+        <meta content="elasticsearch" property="article:section">
       
     
 
@@ -51,11 +51,11 @@
     <meta name="twitter:creator" content="@github.io">
 
     
-      <meta name="twitter:title" content="Understanding docker layers and overlay filesystem">
+      <meta name="twitter:title" content="Commonly used Elasticsearch REST APIs at work">
     
 
     
-      <meta name="twitter:url" content="http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html">
+      <meta name="twitter:url" content="http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html">
     
 
     
@@ -126,94 +126,95 @@
       </div>
       <div class="col-sm-8 col-offset-1 main-layout">
         <header class="post-header">
-  <h1 class="post-title">Understanding docker layers and overlay filesystem</h1>
+  <h1 class="post-title">Commonly used Elasticsearch REST APIs at work</h1>
 </header>
 
-<span class="time">19 Nov 2019</span>
+<span class="time">13 May 2020</span>
 
   <span class="categories">
-    &raquo; <a href="/category/docker">docker</a>
+    &raquo; <a href="/category/elasticsearch">elasticsearch</a>, <a href="/category/rest">rest</a>
   </span>
 
 
 <div class="content">
-  <div class="post"><p>This was one of the things that I wanted to understand better - What exactly is an overlay file system and how is docker using it.
-From archlinux wiki definition
-“Overlayfs allows one, usually read-write, directory tree to be overlaid onto another, read-only directory tree. All modifications go to the upper, writable layer.”</p>
+  <div class="post"><p>This is a simple post listing the most used Elasticsearch rest APIs at work for my reference and maybe others.</p>
 
-<p>An apt example is a linux live CD.</p>
-
-<p>Lets get down to how this overlay file system works</p>
-
-<p>It consists of three layers for the sake of simplicity.</p>
-
-<ul>
-  <li>Lower Read Only Layer</li>
-  <li>Upper Layer that allows read and write</li>
-  <li>The Overlay layer itself that gives the user entire view of the filesystem and from where user actually reads a file or writes to them.</li>
-</ul>
-
-<h4 id="lower-layer">Lower Layer</h4>
-<p>The read only layer where base files of the filesystem are stored. It can be visualized as the base image of our docker image or root of a live CD example.</p>
-
-<h4 id="upper-layer">Upper Layer</h4>
-<p>Any changes made in the overlay layer gets stored in the upper layer. Whenever a process reads a file from the overlay layer, it is checked in upper layer first, if not available it is read from the lower layer.</p>
-
-<h4 id="overlay">Overlay</h4>
-<p>This is the consolidated or union view of lower and upper layers and where the user works on. Whenever any changes are made to a file, overlay layer presents the union of upper and lower layers such that files in upper layer supersede the ones in lower layer.</p>
-
-<p>When objects with the same name exist in both directory trees of upper and lower layers, then their treatment depends on the object type:</p>
-
-<p>File: We see the file in the upper layer, and the file in the lower layer is hidden.</p>
-
-<p>Directory: content of both upper and lower layers of the directory tree is combined and shown in the overlay</p>
-
-<h4 id="copy-on-write">Copy-on-Write</h4>
-<p>Whenever a file already present in lower layer is modified, the file is first copied over to the upper layer and then the modifications are made here.</p>
-
-<h4 id="overlay-in-action">Overlay in action</h4>
-
-<p>Lets create directories</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# mkdir lower upper merged workdir
-root@dd4a4d50aefc:~# echo "I am in lower layer" &gt; lower/lower.txt
-root@dd4a4d50aefc:~# echo "I am in upper layer" &gt; upper/upper.txt
-root@dd4a4d50aefc:~# echo "I am common file lower layer" &gt; lower/common.txt
-root@dd4a4d50aefc:~# echo "I am common file upper layer" &gt; upper/common.txt
-root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower,upperdir=/root/upper,workdir=/root/workdir /root/merged
-root@dd4a4d50aefc:~# ls merged/
-common.txt  lower.txt  upper.txt
-root@dd4a4d50aefc:~# cat merged/common.txt 
-I am common file upper layer
-root@dd4a4d50aefc:~# ls lower/
-common.txt  lower.txt
-root@dd4a4d50aefc:~# ls upper/
-common.txt  upper.txt
-
-</code></pre></div></div>
-<p>The lower layer can be read-only and an overlay itself, while the upper layer is normally writeable. In order to create an overlay of two directories, dir1 and dir2, we can use the following mount command:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower2:/root/lower1,upperdir=/root/upper,workdir=/root/workdir /root/merged
-
-</code></pre></div></div>
-<p>while specifying multiple lower layers, they are separated by a :, with the rightmost lower directory on the bottom, and the leftmost lower directory on the top of the overlay.</p>
-
-<h4 id="new-file-creation-in-overlay">New file creation in overlay</h4>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# echo "I am the new file on the block" &gt; merged/new.txt
-root@dd4a4d50aefc:~# ls merged/
-common.txt  lower.txt  new.txt  upper.txt
-root@dd4a4d50aefc:~# ls upper/
-common.txt  new.txt  upper.txt
-root@dd4a4d50aefc:~# ls lower/
-common.txt  lower.txt
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl "localhost:9200/_cat/indices"
 </code></pre></div></div>
 
-<p>References</p>
-<ul>
-  <li>https://docs.docker.com/storage/storagedriver/#images-and-layers</li>
-  <li>https://wiki.archlinux.org/index.php/Overlay_filesystem</li>
-  <li>https://www.kernel.org/doc/Documentation/filesystems/overlayfs.txt</li>
-</ul>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl "localhost:9200/_cat/shards"
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl "localhost:9200/_nodes?pretty"
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl "localhost:9200/_cluster/allocation/explain?pretty"
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -s 'localhost:9200/_cat/allocation?v'
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -XPOST localhost:9200/_cluster/reroute?retry_failed=true
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST localhost:9200/_reindex \
+-H 'cache-control: no-cache' \
+-H 'content-type: application/json' \
+-d '{
+  "source": {
+    "index": "&lt;&lt;index_old_ones_with_data&gt;&gt;",
+    "query": {
+        "match_all": {}
+    }
+  },
+  "dest": {
+    "index": "&lt;&lt;new_index_with_new_mapping&gt;&gt;"
+  }
+}'
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST localhost:9200/_reindex \
+-H 'cache-control: no-cache' \
+-H 'content-type: application/json' \
+-d '{
+  "source": {
+    "remote": {
+      "host": "http://&lt;some-ip&gt;:9200"
+    },
+    "index": "&lt;&lt;index_old_ones_with_data&gt;&gt;",
+    "query": {
+        "match_all": {}
+    }
+  },
+  "dest": {
+    "index": "&lt;&lt;new_index_with_new_mapping&gt;&gt;"
+  }
+}'
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST "localhost:9200/&lt;index_name&gt;/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+  "query": {
+    "match": {
+      "&lt;field&gt;": "&lt;field-value&gt;"
+    }
+  }
+}
+'
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST "localhost:9200/&lt;index_name&gt;/_delete_by_query?pretty" -H 'Content-Type: application/json' -d'
+{
+  "query": {
+    "match": {
+      "&lt;field&gt;": "&lt;field-value&gt;"
+    }
+  }
+}
+'
+</code></pre></div></div>
+
+<p>PS: I will add description for each soon</p>
 </div>
   <div class="share-page">
   <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
@@ -223,7 +224,7 @@ common.txt  lower.txt
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
   <!-- Facebook -->
-  <div class="fb-share-button" data-href="http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+  <div class="fb-share-button" data-href="http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
 </div>
 
 <div id="fb-root"></div>
@@ -244,8 +245,12 @@ common.txt  lower.txt
         
           
       
+          
+      
     
         
+          
+      
           
       
     
@@ -255,11 +260,6 @@ common.txt  lower.txt
         
           
       
-    
-  
-    
-      
-        
           
       
     
@@ -269,24 +269,45 @@ common.txt  lower.txt
         
           
       
+          
+      
     
+  
+    
+      
         
+          
+      
           
       
     
         
           
       
-    
-        
           
       
     
         
           
       
+          
+      
     
         
+          
+      
+          
+      
+    
+        
+          
+      
+          
+      
+    
+        
+          
+      
           
       
     
@@ -295,10 +316,8 @@ common.txt  lower.txt
 
 <div class="PageNavigation">
   
-    <a class="prev" href="/shell/2019/11/13/write-safe-shell-scripts.html">&laquo; How to write safe shell scripts</a>
+    <a class="prev" href="/docker/2019/11/19/docker-layers-and-overlay-fs.html">&laquo; Understanding docker layers and overlay filesystem</a>
   
-  
-    <a class="next" href="/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html">Commonly used Elasticsearch REST APIs at work &raquo;</a>
   
 </div>
 
@@ -307,8 +326,8 @@ common.txt  lower.txt
   <script type="text/javascript">
     /* <![CDATA[ */
     var disqus_shortname = "mushycode";
-    var disqus_identifier = "http://0.0.0.0:4000_Understanding docker layers and overlay filesystem";
-    var disqus_title = "Understanding docker layers and overlay filesystem";
+    var disqus_identifier = "http://0.0.0.0:4000_Commonly used Elasticsearch REST APIs at work";
+    var disqus_title = "Commonly used Elasticsearch REST APIs at work";
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {

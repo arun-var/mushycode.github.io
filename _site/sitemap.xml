@@ -5,9 +5,101 @@
     <description>My Posts</description>
     <link>http://0.0.0.0:4000/</link>
     <atom:link href="http://0.0.0.0:4000/sitemap.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 10 Dec 2019 17:15:33 +0530</pubDate>
-    <lastBuildDate>Tue, 10 Dec 2019 17:15:33 +0530</lastBuildDate>
+    <pubDate>Wed, 13 May 2020 16:08:44 +0530</pubDate>
+    <lastBuildDate>Wed, 13 May 2020 16:08:44 +0530</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>Commonly used Elasticsearch REST APIs at work</title>
+        <description>&lt;p&gt;This is a simple post listing the most used Elasticsearch rest APIs at work for my reference and maybe others.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cat/indices&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cat/shards&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_nodes?pretty&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cluster/allocation/explain?pretty&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -s 'localhost:9200/_cat/allocation?v'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST localhost:9200/_cluster/reroute?retry_failed=true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST localhost:9200/_reindex \
+-H 'cache-control: no-cache' \
+-H 'content-type: application/json' \
+-d '{
+  &quot;source&quot;: {
+    &quot;index&quot;: &quot;&amp;lt;&amp;lt;index_old_ones_with_data&amp;gt;&amp;gt;&quot;,
+    &quot;query&quot;: {
+        &quot;match_all&quot;: {}
+    }
+  },
+  &quot;dest&quot;: {
+    &quot;index&quot;: &quot;&amp;lt;&amp;lt;new_index_with_new_mapping&amp;gt;&amp;gt;&quot;
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST localhost:9200/_reindex \
+-H 'cache-control: no-cache' \
+-H 'content-type: application/json' \
+-d '{
+  &quot;source&quot;: {
+    &quot;remote&quot;: {
+      &quot;host&quot;: &quot;http://&amp;lt;some-ip&amp;gt;:9200&quot;
+    },
+    &quot;index&quot;: &quot;&amp;lt;&amp;lt;index_old_ones_with_data&amp;gt;&amp;gt;&quot;,
+    &quot;query&quot;: {
+        &quot;match_all&quot;: {}
+    }
+  },
+  &quot;dest&quot;: {
+    &quot;index&quot;: &quot;&amp;lt;&amp;lt;new_index_with_new_mapping&amp;gt;&amp;gt;&quot;
+  }
+}'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST &quot;localhost:9200/&amp;lt;index_name&amp;gt;/_search?pretty&quot; -H 'Content-Type: application/json' -d'
+{
+  &quot;query&quot;: {
+    &quot;match&quot;: {
+      &quot;&amp;lt;field&amp;gt;&quot;: &quot;&amp;lt;field-value&amp;gt;&quot;
+    }
+  }
+}
+'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST &quot;localhost:9200/&amp;lt;index_name&amp;gt;/_delete_by_query?pretty&quot; -H 'Content-Type: application/json' -d'
+{
+  &quot;query&quot;: {
+    &quot;match&quot;: {
+      &quot;&amp;lt;field&amp;gt;&quot;: &quot;&amp;lt;field-value&amp;gt;&quot;
+    }
+  }
+}
+'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;PS: I will add description for each soon&lt;/p&gt;
+</description>
+        <pubDate>Wed, 13 May 2020 18:43:55 +0530</pubDate>
+        <link>http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html</guid>
+        
+        
+        <category>elasticsearch</category>
+        
+        <category>rest</category>
+        
+      </item>
     
       <item>
         <title>Understanding docker layers and overlay filesystem</title>
