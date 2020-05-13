@@ -8,6 +8,7 @@ google_analytics: UA-150479150-Y
 
 enableTags: true
 tagarray: []
+future: true
 
 collections:
   project:
@@ -44,7 +45,8 @@ paginate: 20
 per_page: 20
 paginate_path: "/page/:num/"
 markdown: kramdown
-gems:
+plugins:
+  - jekyll-sitemap
   - jekyll-paginate
   - jekyll-gist
 
