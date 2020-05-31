@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/static/img/favicon.ico" />
     <meta name="google-site-verification" content="VjtiqxmluyG8l1D-SJ1wnHyHhCkFezd088QnIKvmbsk" />
-    <title>Commonly used Elasticsearch REST APIs at work - Posts...</title>
+    <title>Fixing Sectigo's Expired Certificates - Posts...</title>
     <meta name="author" content="Arun Varghese" />
-    <meta name="description" content="Commonly used Elasticsearch REST APIs at work" />
-    <meta name="keywords" content="Commonly used Elasticsearch REST APIs at work, Posts..., elasticsearch, rest" />
+    <meta name="description" content="Fixing Sectigo's Expired Certificates" />
+    <meta name="keywords" content="Fixing Sectigo's Expired Certificates, Posts..., nginx, ssl, certificate" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
     <meta content="1749788565247320" property="fb:app_id">
     <meta content="Posts..." property="og:site_name">
@@ -17,7 +17,7 @@
     
 
     
-      <meta content="Commonly used Elasticsearch REST APIs at work" property="og:title">
+      <meta content="Fixing Sectigo's Expired Certificates" property="og:title">
       <meta content="article" property="og:type">
     
 
@@ -26,11 +26,11 @@
     
 
     
-      <meta content="http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html" property="og:url">
+      <meta content="http://0.0.0.0:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html" property="og:url">
     
 
     
-      <meta content="2020-05-13T18:43:55+05:30" property="article:published_time">
+      <meta content="2020-05-31T02:13:52+05:30" property="article:published_time">
       <meta content="http://0.0.0.0:4000/about/" property="article:author">
     
 
@@ -38,7 +38,7 @@
 
     
       
-        <meta content="elasticsearch" property="article:section">
+        <meta content="nginx" property="article:section">
       
     
 
@@ -51,11 +51,11 @@
     <meta name="twitter:creator" content="@github.io">
 
     
-      <meta name="twitter:title" content="Commonly used Elasticsearch REST APIs at work">
+      <meta name="twitter:title" content="Fixing Sectigo's Expired Certificates">
     
 
     
-      <meta name="twitter:url" content="http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html">
+      <meta name="twitter:url" content="http://0.0.0.0:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html">
     
 
     
@@ -126,95 +126,44 @@
       </div>
       <div class="col-sm-8 col-offset-1 main-layout">
         <header class="post-header">
-  <h1 class="post-title">Commonly used Elasticsearch REST APIs at work</h1>
+  <h1 class="post-title">Fixing Sectigo's Expired Certificates</h1>
 </header>
 
-<span class="time">13 May 2020</span>
+<span class="time">31 May 2020</span>
 
   <span class="categories">
-    &raquo; <a href="/category/elasticsearch">elasticsearch</a>, <a href="/category/rest">rest</a>
+    &raquo; <a href="/category/nginx">nginx</a>, <a href="/category/ssl">ssl</a>, <a href="/category/certificate">certificate</a>
   </span>
 
 
 <div class="content">
-  <div class="post"><p>This is a simple post listing the most used Elasticsearch rest APIs at work for my reference and maybe others.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl "localhost:9200/_cat/indices"
+  <div class="post"><p>Today we noticed that in some of our applications connection to our internal API’s are failing with the following error messages -</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RestClient::SSLCertificateNotVerified (SSL_connect returned=1 errno=0 state=error: certificate verify failed)
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl "localhost:9200/_cat/shards"
+<p>When we checked the nginx logs of the API’s we saw the following error -</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SSL_shutdown() failed (SSL: error:140E0197:SSL routines:SSL_shutdown:shutdown while in init) while SSL handshaking
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl "localhost:9200/_nodes?pretty"
+<p>API’s health check from browser did not show any issue, all seemed fine. Infact, the SSL certificate was not expiring before 2021. So what was causing this issue? Upon further investigation it was found that one of the intermediate certificate in the certificate chain has expired!
+Sectigo’s External CA root expired and thus our certifactes had issues.</p>
+
+<p>The fix was to update our full certificate file with the new roots. In our case, it looked like the following -</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Subject CN: *.ourdomain.com &gt; Issuer CN: Sectigo RSA Domain Validation Secure Server CA
+2. Subject CN: Sectigo RSA Domain Validation Secure Server CA &gt; Issuer CN: USERTrust RSA Certification Authority
+3. Subject CN: USERTrust RSA Certification Authority &gt; Issuer CN: AddTrust External CA Root
+4. Subject CN: AddTrust External CA Root &gt; Issuer CN: AddTrust External CA Root
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl "localhost:9200/_cluster/allocation/explain?pretty"
-</code></pre></div></div>
+<p>We updated the new UserTrust certs for Sectigo from <a href="https://support.sectigo.com/articles/Knowledge/Sectigo-AddTrust-External-CA-Root-Expiring-May-30-2020">this link</a>.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -s 'localhost:9200/_cat/allocation?v'
-</code></pre></div></div>
+<p>The modern root certificates are availble under the heading <strong>USERTrust RSA Certification Authority</strong>. A couple of sections below the cross certificates are also availble.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -XPOST localhost:9200/_cluster/reroute?retry_failed=true
-</code></pre></div></div>
+<p>The certificates need not be re-issued and can be updated with these new ones. In our case 3 and 4 in the full chain were replaced.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST localhost:9200/_reindex \
--H 'cache-control: no-cache' \
--H 'content-type: application/json' \
--d '{
-  "source": {
-    "index": "&lt;&lt;index_old_ones_with_data&gt;&gt;",
-    "query": {
-        "match_all": {}
-    }
-  },
-  "dest": {
-    "index": "&lt;&lt;new_index_with_new_mapping&gt;&gt;"
-  }
-}'
-</code></pre></div></div>
+<p>Hope this helps someone. Let me know in case there is some correction.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST localhost:9200/_reindex \
--H 'cache-control: no-cache' \
--H 'content-type: application/json' \
--d '{
-  "source": {
-    "remote": {
-      "host": "http://&lt;some-ip&gt;:9200"
-    },
-    "index": "&lt;&lt;index_old_ones_with_data&gt;&gt;",
-    "query": {
-        "match_all": {}
-    }
-  },
-  "dest": {
-    "index": "&lt;&lt;new_index_with_new_mapping&gt;&gt;"
-  }
-}'
-</code></pre></div></div>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST "localhost:9200/&lt;index_name&gt;/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match": {
-      "&lt;field&gt;": "&lt;field-value&gt;"
-    }
-  }
-}
-'
-</code></pre></div></div>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X POST "localhost:9200/&lt;index_name&gt;/_delete_by_query?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match": {
-      "&lt;field&gt;": "&lt;field-value&gt;"
-    }
-  }
-}
-'
-</code></pre></div></div>
-
-<p>PS: I will add description for each soon</p>
 </div>
   <div class="share-page">
   <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
@@ -224,7 +173,7 @@
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
   <!-- Facebook -->
-  <div class="fb-share-button" data-href="http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+  <div class="fb-share-button" data-href="http://0.0.0.0:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
 </div>
 
 <div id="fb-root"></div>
@@ -247,14 +196,20 @@
       
           
       
+          
+      
     
         
           
       
           
       
+          
+      
     
         
+          
+      
           
       
           
@@ -268,8 +223,12 @@
       
           
       
+          
+      
     
         
+          
+      
           
       
           
@@ -283,25 +242,6 @@
       
           
       
-    
-  
-    
-      
-        
-          
-      
-          
-      
-    
-        
-          
-      
-          
-      
-    
-        
-          
-      
           
       
     
@@ -313,14 +253,47 @@
       
           
       
+          
+      
     
         
           
       
           
       
+          
+      
     
         
+          
+      
+          
+      
+          
+      
+    
+  
+    
+      
+        
+          
+      
+          
+      
+          
+      
+    
+        
+          
+      
+          
+      
+          
+      
+    
+        
+          
+      
           
       
           
@@ -331,10 +304,8 @@
 
 <div class="PageNavigation">
   
-    <a class="prev" href="/docker/2019/11/19/docker-layers-and-overlay-fs.html">&laquo; Understanding docker layers and overlay filesystem</a>
+    <a class="prev" href="/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html">&laquo; Commonly used Elasticsearch REST APIs at work</a>
   
-  
-    <a class="next" href="/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html">Fixing Sectigo's Expired Certificates &raquo;</a>
   
 </div>
 
@@ -343,8 +314,8 @@
   <script type="text/javascript">
     /* <![CDATA[ */
     var disqus_shortname = "mushycode";
-    var disqus_identifier = "http://0.0.0.0:4000_Commonly used Elasticsearch REST APIs at work";
-    var disqus_title = "Commonly used Elasticsearch REST APIs at work";
+    var disqus_identifier = "http://0.0.0.0:4000_Fixing Sectigo's Expired Certificates";
+    var disqus_title = "Fixing Sectigo's Expired Certificates";
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {

@@ -2,7 +2,7 @@
 layout: post
 title: "Fixing Sectigo's Expired Certificates"
 date:  2020-05-30 20:43:52
-categories: [Nginx, Sectigo, Certificate]
+categories: [nginx, ssl, certificate]
 ---
 
 Today we noticed that in some of our applications connection to our internal API's are failing with the following error messages -

@@ -9,7 +9,7 @@
     <title>How to write safe shell scripts - Posts...</title>
     <meta name="author" content="Arun Varghese" />
     <meta name="description" content="How to write safe shell scripts" />
-    <meta name="keywords" content="How to write safe shell scripts, Posts..., shell" />
+    <meta name="keywords" content="How to write safe shell scripts, Posts..., shell, bash, script" />
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
     <meta content="1749788565247320" property="fb:app_id">
     <meta content="Posts..." property="og:site_name">
@@ -26,7 +26,7 @@
     
 
     
-      <meta content="http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html" property="og:url">
+      <meta content="http://0.0.0.0:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html" property="og:url">
     
 
     
@@ -55,7 +55,7 @@
     
 
     
-      <meta name="twitter:url" content="http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html">
+      <meta name="twitter:url" content="http://0.0.0.0:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html">
     
 
     
@@ -132,7 +132,7 @@
 <span class="time">13 Nov 2019</span>
 
   <span class="categories">
-    &raquo; <a href="/category/shell">shell</a>
+    &raquo; <a href="/category/shell">shell</a>, <a href="/category/bash">bash</a>, <a href="/category/script">script</a>
   </span>
 
 
@@ -147,7 +147,7 @@ This ensures that Bash will be used to interpret the script, even if it is execu
 <p>this will make the shell script exit as soon as any line in the bash script fails.
 for example, a shell file like below will execute every line
 <script src="https://gist.github.com/501d903a4db01b5bcbf4e59e7ecae7c2.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./set_e_without.sh 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./set_e_without.sh 
 true
 true
 false
@@ -155,13 +155,13 @@ true
 </code></pre></div></div>
 <p>After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.
 <script src="https://gist.github.com/9d841d3cc79224faf16f8fc602799372.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_e.sh 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_e.sh 
 true
 true
 </code></pre></div></div>
 <p>if we don’t want the script to fail after certain failing statements, we can append these certain statements with || true.
 <script src="https://gist.github.com/1531d5db9b2bd6f0b3aa98c7d73cd044.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_e_and_ignore_fail.sh           
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_e_and_ignore_fail.sh           
 true
 true
 failing foo was ignored
@@ -172,7 +172,7 @@ true
 
 <p>this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like
 <script src="https://gist.github.com/a9c92e43f02fd4c65514bb63fb05dce4.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_x.sh           
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_x.sh           
 ++ true
 ++ echo true
 true
@@ -186,7 +186,7 @@ true
 
 <p>this option will force bash to treat unset variables as an error and exit immediately.
 <script src="https://gist.github.com/a9b2414088f39537cbd6e168e9e716f6.js"> </script></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./without_set_u.sh 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./without_set_u.sh 
 ++ a=0
 ++ echo 0
 0
@@ -200,7 +200,7 @@ true
 
 <script src="https://gist.github.com/ca24e436660a986cbd58d9b22f113ce2.js"> </script>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_u.sh 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_set_u.sh 
 ++ a=0
 ++ echo 0
 0
@@ -216,7 +216,7 @@ This particular option sets the exit code of pipeline commands to that of the ri
 
 <script src="https://gist.github.com/5df45b0e6c32925c6ffd927c77b16900.js"> </script>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./without_pipefail.sh 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./without_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
@@ -226,7 +226,7 @@ but I execute
 
 <script src="https://gist.github.com/c3016ad398b86686d737f042298aac80.js"> </script>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_pipefail.sh 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arun@home:~$ ./with_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
@@ -245,7 +245,7 @@ arun@home:~$ echo $?
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
   <!-- Facebook -->
-  <div class="fb-share-button" data-href="http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+  <div class="fb-share-button" data-href="http://0.0.0.0:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
 </div>
 
 <div id="fb-root"></div>
@@ -266,8 +266,24 @@ arun@home:~$ echo $?
         
           
       
+          
+      
+          
+      
     
         
+          
+      
+          
+      
+          
+      
+    
+        
+          
+      
+          
+      
           
       
     
@@ -277,11 +293,16 @@ arun@home:~$ echo $?
         
           
       
-    
-  
-    
+          
       
+          
+      
+    
         
+          
+      
+          
+      
           
       
     
@@ -291,33 +312,88 @@ arun@home:~$ echo $?
         
           
       
-    
-        
           
       
-    
-        
-          
-      
-    
-        
-          
-      
-    
-        
-          
-      
-    
-        
           
       
     
   
+    
+      
+        
+          
+      
+          
+      
+          
+      
+    
+        
+          
+      
+          
+      
+          
+      
+    
+        
+          
+      
+          
+      
+          
+      
+    
   
+    
+      
+        
+          
+      
+          
+      
+          
+      
+    
+        
+          
+      
+          
+      
+          
+      
+    
+        
+          
+      
+          
+      
+          
+            
+            <div class="panel-body">
+              <h4>Related Posts</h4>
+              <ul>
+            
+                <li class="relatedPost">
+                  <a href="http://0.0.0.0:4000/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html">How to remove file in linux using regex</a>
+                  
+                    (Categories: <a href="/category/linux">linux</a>, <a href="/category/regex">regex</a>, <a href="/category/script">script</a>)
+                  
+                </li>
+          
+          
+        
+      
+    
+  
+  
+  </ul>
+</div>
+
 
 <div class="PageNavigation">
   
-    <a class="prev" href="/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html">&laquo; How to remove file in linux using regex</a>
+    <a class="prev" href="/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html">&laquo; How to remove file in linux using regex</a>
   
   
     <a class="next" href="/docker/2019/11/19/docker-layers-and-overlay-fs.html">Understanding docker layers and overlay filesystem &raquo;</a>

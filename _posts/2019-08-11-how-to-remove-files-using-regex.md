@@ -2,7 +2,7 @@
 layout: post
 title:  "How to remove file in linux using regex"
 date:   2019-07-20 06:20:00 +0700
-categories: [linux, remove, delete, files, rm, regex]
+categories: [linux, regex, script]
 ---
 
 ####  Deleting older files with names usually having date as prefix/suffix

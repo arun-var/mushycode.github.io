@@ -2,7 +2,7 @@
 layout: post
 title: "How to write safe shell scripts"
 date:  2019-11-13 15:52:57
-categories: shell
+categories: [shell, bash, script]
 ---
 
 #### Shebang (#!)

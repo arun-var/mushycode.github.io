@@ -174,7 +174,7 @@ From archlinux wiki definition
 <h4 id="overlay-in-action">Overlay in action</h4>
 
 <p>Lets create directories</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# mkdir lower upper merged workdir
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# mkdir lower upper merged workdir
 root@dd4a4d50aefc:~# echo "I am in lower layer" &gt; lower/lower.txt
 root@dd4a4d50aefc:~# echo "I am in upper layer" &gt; upper/upper.txt
 root@dd4a4d50aefc:~# echo "I am common file lower layer" &gt; lower/common.txt
@@ -192,14 +192,14 @@ common.txt  upper.txt
 </code></pre></div></div>
 <p>The lower layer can be read-only and an overlay itself, while the upper layer is normally writeable. In order to create an overlay of two directories, dir1 and dir2, we can use the following mount command:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower2:/root/lower1,upperdir=/root/upper,workdir=/root/workdir /root/merged
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower2:/root/lower1,upperdir=/root/upper,workdir=/root/workdir /root/merged
 
 </code></pre></div></div>
 <p>while specifying multiple lower layers, they are separated by a :, with the rightmost lower directory on the bottom, and the leftmost lower directory on the top of the overlay.</p>
 
 <h4 id="new-file-creation-in-overlay">New file creation in overlay</h4>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# echo "I am the new file on the block" &gt; merged/new.txt
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@dd4a4d50aefc:~# echo "I am the new file on the block" &gt; merged/new.txt
 root@dd4a4d50aefc:~# ls merged/
 common.txt  lower.txt  new.txt  upper.txt
 root@dd4a4d50aefc:~# ls upper/
@@ -249,6 +249,21 @@ common.txt  lower.txt
           
       
     
+        
+          
+      
+    
+  
+    
+      
+        
+          
+      
+    
+        
+          
+      
+    
   
     
       
@@ -263,21 +278,17 @@ common.txt  lower.txt
           
       
     
+        
+          
+      
+    
+        
+          
+      
+    
   
     
       
-        
-          
-      
-    
-        
-          
-      
-    
-        
-          
-      
-    
         
           
       
@@ -295,7 +306,7 @@ common.txt  lower.txt
 
 <div class="PageNavigation">
   
-    <a class="prev" href="/shell/2019/11/13/write-safe-shell-scripts.html">&laquo; How to write safe shell scripts</a>
+    <a class="prev" href="/shell/bash/script/2019/11/13/write-safe-shell-scripts.html">&laquo; How to write safe shell scripts</a>
   
   
     <a class="next" href="/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html">Commonly used Elasticsearch REST APIs at work &raquo;</a>

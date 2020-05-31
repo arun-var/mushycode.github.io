@@ -5,33 +5,76 @@
     <description>My Posts</description>
     <link>http://0.0.0.0:4000/</link>
     <atom:link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 13 May 2020 16:08:44 +0530</pubDate>
-    <lastBuildDate>Wed, 13 May 2020 16:08:44 +0530</lastBuildDate>
-    <generator>Jekyll v3.8.5</generator>
+    <pubDate>Sun, 31 May 2020 20:12:41 +0530</pubDate>
+    <lastBuildDate>Sun, 31 May 2020 20:12:41 +0530</lastBuildDate>
+    <generator>Jekyll v3.8.7</generator>
+    
+      <item>
+        <title>Fixing Sectigo's Expired Certificates</title>
+        <description>&lt;p&gt;Today we noticed that in some of our applications connection to our internal API’s are failing with the following error messages -&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;RestClient::SSLCertificateNotVerified (SSL_connect returned=1 errno=0 state=error: certificate verify failed)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When we checked the nginx logs of the API’s we saw the following error -&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SSL_shutdown() failed (SSL: error:140E0197:SSL routines:SSL_shutdown:shutdown while in init) while SSL handshaking
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;API’s health check from browser did not show any issue, all seemed fine. Infact, the SSL certificate was not expiring before 2021. So what was causing this issue? Upon further investigation it was found that one of the intermediate certificate in the certificate chain has expired!
+Sectigo’s External CA root expired and thus our certifactes had issues.&lt;/p&gt;
+
+&lt;p&gt;The fix was to update our full certificate file with the new roots. In our case, it looked like the following -&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. Subject CN: *.ourdomain.com &amp;gt; Issuer CN: Sectigo RSA Domain Validation Secure Server CA
+2. Subject CN: Sectigo RSA Domain Validation Secure Server CA &amp;gt; Issuer CN: USERTrust RSA Certification Authority
+3. Subject CN: USERTrust RSA Certification Authority &amp;gt; Issuer CN: AddTrust External CA Root
+4. Subject CN: AddTrust External CA Root &amp;gt; Issuer CN: AddTrust External CA Root
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We updated the new UserTrust certs for Sectigo from &lt;a href=&quot;https://support.sectigo.com/articles/Knowledge/Sectigo-AddTrust-External-CA-Root-Expiring-May-30-2020&quot;&gt;this link&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The modern root certificates are availble under the heading &lt;strong&gt;USERTrust RSA Certification Authority&lt;/strong&gt;. A couple of sections below the cross certificates are also availble.&lt;/p&gt;
+
+&lt;p&gt;The certificates need not be re-issued and can be updated with these new ones. In our case 3 and 4 in the full chain were replaced.&lt;/p&gt;
+
+&lt;p&gt;Hope this helps someone. Let me know in case there is some correction.&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 31 May 2020 02:13:52 +0530</pubDate>
+        <link>http://0.0.0.0:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html</guid>
+        
+        
+        <category>nginx</category>
+        
+        <category>ssl</category>
+        
+        <category>certificate</category>
+        
+      </item>
     
       <item>
         <title>Commonly used Elasticsearch REST APIs at work</title>
         <description>&lt;p&gt;This is a simple post listing the most used Elasticsearch rest APIs at work for my reference and maybe others.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cat/indices&quot;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cat/indices&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cat/shards&quot;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cat/shards&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_nodes?pretty&quot;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_nodes?pretty&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cluster/allocation/explain?pretty&quot;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cluster/allocation/explain?pretty&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -s 'localhost:9200/_cat/allocation?v'
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -s 'localhost:9200/_cat/allocation?v'
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST localhost:9200/_cluster/reroute?retry_failed=true
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST localhost:9200/_cluster/reroute?retry_failed=true
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST localhost:9200/_reindex \
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST localhost:9200/_reindex \
 -H 'cache-control: no-cache' \
 -H 'content-type: application/json' \
 -d '{
@@ -47,7 +90,7 @@
 }'
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST localhost:9200/_reindex \
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST localhost:9200/_reindex \
 -H 'cache-control: no-cache' \
 -H 'content-type: application/json' \
 -d '{
@@ -66,7 +109,7 @@
 }'
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST &quot;localhost:9200/&amp;lt;index_name&amp;gt;/_search?pretty&quot; -H 'Content-Type: application/json' -d'
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST &quot;localhost:9200/&amp;lt;index_name&amp;gt;/_search?pretty&quot; -H 'Content-Type: application/json' -d'
 {
   &quot;query&quot;: {
     &quot;match&quot;: {
@@ -77,7 +120,7 @@
 '
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST &quot;localhost:9200/&amp;lt;index_name&amp;gt;/_delete_by_query?pretty&quot; -H 'Content-Type: application/json' -d'
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST &quot;localhost:9200/&amp;lt;index_name&amp;gt;/_delete_by_query?pretty&quot; -H 'Content-Type: application/json' -d'
 {
   &quot;query&quot;: {
     &quot;match&quot;: {
@@ -140,7 +183,7 @@ From archlinux wiki definition
 &lt;h4 id=&quot;overlay-in-action&quot;&gt;Overlay in action&lt;/h4&gt;
 
 &lt;p&gt;Lets create directories&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# mkdir lower upper merged workdir
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# mkdir lower upper merged workdir
 root@dd4a4d50aefc:~# echo &quot;I am in lower layer&quot; &amp;gt; lower/lower.txt
 root@dd4a4d50aefc:~# echo &quot;I am in upper layer&quot; &amp;gt; upper/upper.txt
 root@dd4a4d50aefc:~# echo &quot;I am common file lower layer&quot; &amp;gt; lower/common.txt
@@ -158,14 +201,14 @@ common.txt  upper.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;The lower layer can be read-only and an overlay itself, while the upper layer is normally writeable. In order to create an overlay of two directories, dir1 and dir2, we can use the following mount command:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower2:/root/lower1,upperdir=/root/upper,workdir=/root/workdir /root/merged
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower2:/root/lower1,upperdir=/root/upper,workdir=/root/workdir /root/merged
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;while specifying multiple lower layers, they are separated by a :, with the rightmost lower directory on the bottom, and the leftmost lower directory on the top of the overlay.&lt;/p&gt;
 
 &lt;h4 id=&quot;new-file-creation-in-overlay&quot;&gt;New file creation in overlay&lt;/h4&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# echo &quot;I am the new file on the block&quot; &amp;gt; merged/new.txt
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# echo &quot;I am the new file on the block&quot; &amp;gt; merged/new.txt
 root@dd4a4d50aefc:~# ls merged/
 common.txt  lower.txt  new.txt  upper.txt
 root@dd4a4d50aefc:~# ls upper/
@@ -202,7 +245,7 @@ This ensures that Bash will be used to interpret the script, even if it is execu
 &lt;p&gt;this will make the shell script exit as soon as any line in the bash script fails.
 for example, a shell file like below will execute every line
 &lt;script src=&quot;https://gist.github.com/501d903a4db01b5bcbf4e59e7ecae7c2.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./set_e_without.sh 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./set_e_without.sh 
 true
 true
 false
@@ -210,13 +253,13 @@ true
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.
 &lt;script src=&quot;https://gist.github.com/9d841d3cc79224faf16f8fc602799372.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_e.sh 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_e.sh 
 true
 true
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;if we don’t want the script to fail after certain failing statements, we can append these certain statements with || true.
 &lt;script src=&quot;https://gist.github.com/1531d5db9b2bd6f0b3aa98c7d73cd044.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_e_and_ignore_fail.sh           
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_e_and_ignore_fail.sh           
 true
 true
 failing foo was ignored
@@ -227,7 +270,7 @@ true
 
 &lt;p&gt;this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like
 &lt;script src=&quot;https://gist.github.com/a9c92e43f02fd4c65514bb63fb05dce4.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_x.sh           
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_x.sh           
 ++ true
 ++ echo true
 true
@@ -241,7 +284,7 @@ true
 
 &lt;p&gt;this option will force bash to treat unset variables as an error and exit immediately.
 &lt;script src=&quot;https://gist.github.com/a9b2414088f39537cbd6e168e9e716f6.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./without_set_u.sh 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./without_set_u.sh 
 ++ a=0
 ++ echo 0
 0
@@ -255,7 +298,7 @@ true
 
 &lt;script src=&quot;https://gist.github.com/ca24e436660a986cbd58d9b22f113ce2.js&quot;&gt; &lt;/script&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_u.sh 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_u.sh 
 ++ a=0
 ++ echo 0
 0
@@ -271,7 +314,7 @@ This particular option sets the exit code of pipeline commands to that of the ri
 
 &lt;script src=&quot;https://gist.github.com/5df45b0e6c32925c6ffd927c77b16900.js&quot;&gt; &lt;/script&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./without_pipefail.sh 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./without_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
@@ -281,7 +324,7 @@ but I execute
 
 &lt;script src=&quot;https://gist.github.com/c3016ad398b86686d737f042298aac80.js&quot;&gt; &lt;/script&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_pipefail.sh 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
 ++ echo 'pipe chain failed'
 pipe chain failed
@@ -293,11 +336,15 @@ arun@home:~$ echo $?
 
 </description>
         <pubDate>Wed, 13 Nov 2019 21:22:57 +0530</pubDate>
-        <link>http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html</link>
-        <guid isPermaLink="true">http://0.0.0.0:4000/shell/2019/11/13/write-safe-shell-scripts.html</guid>
+        <link>http://0.0.0.0:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html</guid>
         
         
         <category>shell</category>
+        
+        <category>bash</category>
+        
+        <category>script</category>
         
       </item>
     
@@ -306,9 +353,9 @@ arun@home:~$ echo $?
         <description>&lt;h4 id=&quot;deleting-older-files-with-names-usually-having-date-as-prefixsuffix&quot;&gt;Deleting older files with names usually having date as prefix/suffix&lt;/h4&gt;
 
 &lt;p&gt;Generally compressed log files created by utilities contain a date in the filename.
-For cleaning such accumulated compressed files we can use &lt;code class=&quot;highlighter-rouge&quot;&gt;rm&lt;/code&gt; command with regex.&lt;/p&gt;
+For cleaning such accumulated compressed files we can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rm&lt;/code&gt; command with regex.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls
 
 2013-12-23-nginx.tar.gz                2016-04-29-nginx.tar.gz
 2013-12-24-nginx.tar.gz                2016-05-21-nginx.tar.gz
@@ -324,24 +371,18 @@ For cleaning such accumulated compressed files we can use &lt;code class=&quot;h
 2016-04-28-nginx.tar.gz
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ rm 201[3-6]*&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ rm 201[3-6]*&lt;/code&gt;&lt;/p&gt;
 </description>
         <pubDate>Sat, 20 Jul 2019 04:50:00 +0530</pubDate>
-        <link>http://0.0.0.0:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html</link>
-        <guid isPermaLink="true">http://0.0.0.0:4000/linux/remove/delete/files/rm/regex/2019/07/20/how-to-remove-files-using-regex.html</guid>
+        <link>http://0.0.0.0:4000/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html</guid>
         
         
         <category>linux</category>
         
-        <category>remove</category>
-        
-        <category>delete</category>
-        
-        <category>files</category>
-        
-        <category>rm</category>
-        
         <category>regex</category>
+        
+        <category>script</category>
         
       </item>
     
