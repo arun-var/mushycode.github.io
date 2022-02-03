@@ -3,10 +3,10 @@
   <channel>
     <title>Posts...</title>
     <description>My Posts</description>
-    <link>http://0.0.0.0:4000/</link>
-    <atom:link href="http://0.0.0.0:4000/sitemap.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 31 May 2020 20:12:41 +0530</pubDate>
-    <lastBuildDate>Sun, 31 May 2020 20:12:41 +0530</lastBuildDate>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/sitemap.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 14 Aug 2020 13:05:25 +0530</pubDate>
+    <lastBuildDate>Fri, 14 Aug 2020 13:05:25 +0530</lastBuildDate>
     <generator>Jekyll v3.8.7</generator>
     
       <item>
@@ -40,8 +40,8 @@ Sectigo’s External CA root expired and thus our certifactes had issues.&lt;/p&
 
 </description>
         <pubDate>Sun, 31 May 2020 02:13:52 +0530</pubDate>
-        <link>http://0.0.0.0:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html</link>
-        <guid isPermaLink="true">http://0.0.0.0:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html</guid>
+        <link>http://localhost:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html</link>
+        <guid isPermaLink="true">http://localhost:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html</guid>
         
         
         <category>nginx</category>
@@ -134,8 +134,8 @@ Sectigo’s External CA root expired and thus our certifactes had issues.&lt;/p&
 &lt;p&gt;PS: I will add description for each soon&lt;/p&gt;
 </description>
         <pubDate>Wed, 13 May 2020 18:43:55 +0530</pubDate>
-        <link>http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html</link>
-        <guid isPermaLink="true">http://0.0.0.0:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html</guid>
+        <link>http://localhost:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html</link>
+        <guid isPermaLink="true">http://localhost:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html</guid>
         
         
         <category>elasticsearch</category>
@@ -225,8 +225,8 @@ common.txt  lower.txt
 &lt;/ul&gt;
 </description>
         <pubDate>Tue, 19 Nov 2019 18:17:46 +0530</pubDate>
-        <link>http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</link>
-        <guid isPermaLink="true">http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</guid>
+        <link>http://localhost:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</link>
+        <guid isPermaLink="true">http://localhost:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</guid>
         
         
         <category>docker</category>
@@ -336,8 +336,8 @@ arun@home:~$ echo $?
 
 </description>
         <pubDate>Wed, 13 Nov 2019 21:22:57 +0530</pubDate>
-        <link>http://0.0.0.0:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html</link>
-        <guid isPermaLink="true">http://0.0.0.0:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html</guid>
+        <link>http://localhost:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html</link>
+        <guid isPermaLink="true">http://localhost:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html</guid>
         
         
         <category>shell</category>
@@ -374,8 +374,8 @@ For cleaning such accumulated compressed files we can use &lt;code class=&quot;l
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ rm 201[3-6]*&lt;/code&gt;&lt;/p&gt;
 </description>
         <pubDate>Sat, 20 Jul 2019 04:50:00 +0530</pubDate>
-        <link>http://0.0.0.0:4000/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html</link>
-        <guid isPermaLink="true">http://0.0.0.0:4000/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html</guid>
+        <link>http://localhost:4000/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html</link>
+        <guid isPermaLink="true">http://localhost:4000/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html</guid>
         
         
         <category>linux</category>
