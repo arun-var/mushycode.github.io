@@ -1,3 +1,7 @@
 source 'https://rubygems.org'
-gem 'github-pages', '~> 223',  group: :jekyll_plugins
-gem 'jekyll-sitemap'
+
+# 'github-pages' includes 'jekyll' gem 
+gem 'github-pages'
+gem 'bourbon'
+gem 'jemoji'
+gem 'jekyll-gist'

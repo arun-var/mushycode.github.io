@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts...</title>
-    <description>My Posts</description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/sitemap.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 14 Aug 2020 13:05:25 +0530</pubDate>
-    <lastBuildDate>Fri, 14 Aug 2020 13:05:25 +0530</lastBuildDate>
-    <generator>Jekyll v3.8.7</generator>
+    <title>Mushycode</title>
+    <description>My thoughtsdump and playground
+</description>
+    <link>http://0.0.0.0:4000/</link>
+    <atom:link href="http://0.0.0.0:4000/sitemap.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sat, 05 Feb 2022 05:15:59 +0000</pubDate>
+    <lastBuildDate>Sat, 05 Feb 2022 05:15:59 +0000</lastBuildDate>
+    <generator>Jekyll v3.9.0</generator>
     
       <item>
-        <title>Fixing Sectigo's Expired Certificates</title>
-        <description>&lt;p&gt;Today we noticed that in some of our applications connection to our internal API’s are failing with the following error messages -&lt;/p&gt;
+        <title>Lessons from Sectigo's Expired Certificates</title>
+        <description>&lt;h2 id=&quot;lessons-from-sectigos-expired-certificates---why-it-is-important-to-validate-ssl-certificate-chain-and-not-just-root-ssl-certificate-in-monitoring-systems&quot;&gt;Lessons from Sectigo’s Expired Certificates - Why it is important to validate SSL certificate chain and not just root SSL certificate in monitoring systems&lt;/h2&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;how-it-all-started-today&quot;&gt;How it all started today?&lt;/h3&gt;
+&lt;p&gt;Today we noticed that in some of our applications connection to our internal API’s are failing with the following error messages -&lt;/p&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;RestClient::SSLCertificateNotVerified (SSL_connect returned=1 errno=0 state=error: certificate verify failed)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -22,6 +27,7 @@
 &lt;p&gt;API’s health check from browser did not show any issue, all seemed fine. Infact, the SSL certificate was not expiring before 2021. So what was causing this issue? Upon further investigation it was found that one of the intermediate certificate in the certificate chain has expired!
 Sectigo’s External CA root expired and thus our certifactes had issues.&lt;/p&gt;
 
+&lt;h3 id=&quot;how-did-we-fix-it&quot;&gt;How did we fix it?&lt;/h3&gt;
 &lt;p&gt;The fix was to update our full certificate file with the new roots. In our case, it looked like the following -&lt;/p&gt;
 
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. Subject CN: *.ourdomain.com &amp;gt; Issuer CN: Sectigo RSA Domain Validation Secure Server CA
@@ -39,45 +45,53 @@ Sectigo’s External CA root expired and thus our certifactes had issues.&lt;/p&
 &lt;p&gt;Hope this helps someone. Let me know in case there is some correction.&lt;/p&gt;
 
 </description>
-        <pubDate>Sun, 31 May 2020 02:13:52 +0530</pubDate>
-        <link>http://localhost:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html</link>
-        <guid isPermaLink="true">http://localhost:4000/nginx/ssl/certificate/2020/05/31/fix-sectigo-expired-cert.html</guid>
-        
-        
-        <category>nginx</category>
+        <pubDate>Sat, 30 May 2020 20:43:52 +0000</pubDate>
+        <link>http://0.0.0.0:4000/ssl/2020/05/30/fix-sectigo-expired-cert.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/ssl/2020/05/30/fix-sectigo-expired-cert.html</guid>
         
         <category>ssl</category>
         
-        <category>certificate</category>
+        <category>issues</category>
+        
+        <category>sectigo</category>
+        
+        <category>certificates</category>
+        
+        <category>expiry</category>
+        
+        
+        <category>ssl</category>
         
       </item>
     
       <item>
         <title>Commonly used Elasticsearch REST APIs at work</title>
-        <description>&lt;p&gt;This is a simple post listing the most used Elasticsearch rest APIs at work for my reference and maybe others.&lt;/p&gt;
+        <description>&lt;h2 id=&quot;helpful-elasticsearch-apis&quot;&gt;Helpful Elasticsearch APIs&lt;/h2&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cat/indices&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This is a simple post listing the Elasticsearch rest APIs that I use most at work.&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cat/shards&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;list-all-indices&quot;&gt;List all indices&lt;/h3&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_nodes?pretty&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;s2&quot;&gt;&quot;localhost:9200/_cat/indices&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &quot;localhost:9200/_cluster/allocation/explain?pretty&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;list-all-shards&quot;&gt;List all shards&lt;/h3&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -s 'localhost:9200/_cat/allocation?v'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;s2&quot;&gt;&quot;localhost:9200/_cat/shards&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -XPOST localhost:9200/_cluster/reroute?retry_failed=true
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;list-all-elasticserach-nodes&quot;&gt;List all elasticserach nodes&lt;/h3&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST localhost:9200/_reindex \
--H 'cache-control: no-cache' \
--H 'content-type: application/json' \
--d '{
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;s2&quot;&gt;&quot;localhost:9200/_nodes?pretty&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;s2&quot;&gt;&quot;localhost:9200/_cluster/allocation/explain?pretty&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'localhost:9200/_cat/allocation?v'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;nt&quot;&gt;-XPOST&lt;/span&gt; localhost:9200/_cluster/reroute?retry_failed&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST localhost:9200/_reindex &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'cache-control: no-cache'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'content-type: application/json'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
   &quot;source&quot;: {
     &quot;index&quot;: &quot;&amp;lt;&amp;lt;index_old_ones_with_data&amp;gt;&amp;gt;&quot;,
     &quot;query&quot;: {
@@ -87,13 +101,12 @@ Sectigo’s External CA root expired and thus our certifactes had issues.&lt;/p&
   &quot;dest&quot;: {
     &quot;index&quot;: &quot;&amp;lt;&amp;lt;new_index_with_new_mapping&amp;gt;&amp;gt;&quot;
   }
-}'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+}'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST localhost:9200/_reindex \
--H 'cache-control: no-cache' \
--H 'content-type: application/json' \
--d '{
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST localhost:9200/_reindex &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'cache-control: no-cache'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'content-type: application/json'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
   &quot;source&quot;: {
     &quot;remote&quot;: {
       &quot;host&quot;: &quot;http://&amp;lt;some-ip&amp;gt;:9200&quot;
@@ -106,10 +119,9 @@ Sectigo’s External CA root expired and thus our certifactes had issues.&lt;/p&
   &quot;dest&quot;: {
     &quot;index&quot;: &quot;&amp;lt;&amp;lt;new_index_with_new_mapping&amp;gt;&amp;gt;&quot;
   }
-}'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+}'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST &quot;localhost:9200/&amp;lt;index_name&amp;gt;/_search?pretty&quot; -H 'Content-Type: application/json' -d'
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST &lt;span class=&quot;s2&quot;&gt;&quot;localhost:9200/&amp;lt;index_name&amp;gt;/_search?pretty&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'
 {
   &quot;query&quot;: {
     &quot;match&quot;: {
@@ -117,10 +129,9 @@ Sectigo’s External CA root expired and thus our certifactes had issues.&lt;/p&
     }
   }
 }
-'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl -X POST &quot;localhost:9200/&amp;lt;index_name&amp;gt;/_delete_by_query?pretty&quot; -H 'Content-Type: application/json' -d'
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST &lt;span class=&quot;s2&quot;&gt;&quot;localhost:9200/&amp;lt;index_name&amp;gt;/_delete_by_query?pretty&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'
 {
   &quot;query&quot;: {
     &quot;match&quot;: {
@@ -128,31 +139,37 @@ Sectigo’s External CA root expired and thus our certifactes had issues.&lt;/p&
     }
   }
 }
-'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;PS: I will add description for each soon&lt;/p&gt;
 </description>
-        <pubDate>Wed, 13 May 2020 18:43:55 +0530</pubDate>
-        <link>http://localhost:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html</link>
-        <guid isPermaLink="true">http://localhost:4000/elasticsearch/rest/2020/05/13/useful-elasticsearch-rest-apis.html</guid>
-        
+        <pubDate>Wed, 13 May 2020 13:13:55 +0000</pubDate>
+        <link>http://0.0.0.0:4000/elasticsearch/2020/05/13/useful-elasticsearch-rest-apis.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/elasticsearch/2020/05/13/useful-elasticsearch-rest-apis.html</guid>
         
         <category>elasticsearch</category>
         
         <category>rest</category>
         
+        <category>commands</category>
+        
+        
+        <category>elasticsearch</category>
+        
       </item>
     
       <item>
         <title>Understanding docker layers and overlay filesystem</title>
-        <description>&lt;p&gt;This was one of the things that I wanted to understand better - What exactly is an overlay file system and how is docker using it.
+        <description>&lt;h2 id=&quot;what-are-docker-layers-and-overlay-filesystems&quot;&gt;What are docker layers and overlay filesystems&lt;/h2&gt;
+&lt;p&gt;This was one of the things that I wanted to understand better - What exactly is an overlay file system and how is docker using it.
 From archlinux wiki definition
 “Overlayfs allows one, usually read-write, directory tree to be overlaid onto another, read-only directory tree. All modifications go to the upper, writable layer.”&lt;/p&gt;
 
 &lt;p&gt;An apt example is a linux live CD.&lt;/p&gt;
 
 &lt;p&gt;Lets get down to how this overlay file system works&lt;/p&gt;
+
+&lt;h3 id=&quot;overlays-and-docker&quot;&gt;Overlays and docker&lt;/h3&gt;
 
 &lt;p&gt;It consists of three layers for the sake of simplicity.&lt;/p&gt;
 
@@ -183,39 +200,37 @@ From archlinux wiki definition
 &lt;h4 id=&quot;overlay-in-action&quot;&gt;Overlay in action&lt;/h4&gt;
 
 &lt;p&gt;Lets create directories&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# mkdir lower upper merged workdir
-root@dd4a4d50aefc:~# echo &quot;I am in lower layer&quot; &amp;gt; lower/lower.txt
-root@dd4a4d50aefc:~# echo &quot;I am in upper layer&quot; &amp;gt; upper/upper.txt
-root@dd4a4d50aefc:~# echo &quot;I am common file lower layer&quot; &amp;gt; lower/common.txt
-root@dd4a4d50aefc:~# echo &quot;I am common file upper layer&quot; &amp;gt; upper/common.txt
-root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower,upperdir=/root/upper,workdir=/root/workdir /root/merged
-root@dd4a4d50aefc:~# ls merged/
-common.txt  lower.txt  upper.txt
-root@dd4a4d50aefc:~# cat merged/common.txt 
-I am common file upper layer
-root@dd4a4d50aefc:~# ls lower/
-common.txt  lower.txt
-root@dd4a4d50aefc:~# ls upper/
-common.txt  upper.txt
 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;mkdir &lt;/span&gt;lower upper merged workdir
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;I am in lower layer&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; lower/lower.txt
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;I am in upper layer&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; upper/upper.txt
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;I am common file lower layer&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; lower/common.txt
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;I am common file upper layer&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; upper/common.txt
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; overlay overlay &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lowerdir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/root/lower,upperdir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/root/upper,workdir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/root/workdir /root/merged
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;merged/
+common.txt  lower.txt  upper.txt
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;merged/common.txt 
+I am common file upper layer
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;lower/
+common.txt  lower.txt
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;upper/
+common.txt  upper.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;The lower layer can be read-only and an overlay itself, while the upper layer is normally writeable. In order to create an overlay of two directories, dir1 and dir2, we can use the following mount command:&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower2:/root/lower1,upperdir=/root/upper,workdir=/root/workdir /root/merged
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; overlay overlay &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lowerdir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/root/lower2:/root/lower1,upperdir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/root/upper,workdir&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/root/workdir /root/merged&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;while specifying multiple lower layers, they are separated by a :, with the rightmost lower directory on the bottom, and the leftmost lower directory on the top of the overlay.&lt;/p&gt;
 
 &lt;h4 id=&quot;new-file-creation-in-overlay&quot;&gt;New file creation in overlay&lt;/h4&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@dd4a4d50aefc:~# echo &quot;I am the new file on the block&quot; &amp;gt; merged/new.txt
-root@dd4a4d50aefc:~# ls merged/
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;I am the new file on the block&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; merged/new.txt
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;merged/
 common.txt  lower.txt  new.txt  upper.txt
-root@dd4a4d50aefc:~# ls upper/
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;upper/
 common.txt  new.txt  upper.txt
-root@dd4a4d50aefc:~# ls lower/
-common.txt  lower.txt
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+root@dd4a4d50aefc:~# &lt;span class=&quot;nb&quot;&gt;ls &lt;/span&gt;lower/
+common.txt  lower.txt&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;References&lt;/p&gt;
 &lt;ul&gt;
@@ -224,9 +239,15 @@ common.txt  lower.txt
   &lt;li&gt;https://www.kernel.org/doc/Documentation/filesystems/overlayfs.txt&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Tue, 19 Nov 2019 18:17:46 +0530</pubDate>
-        <link>http://localhost:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</link>
-        <guid isPermaLink="true">http://localhost:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</guid>
+        <pubDate>Tue, 19 Nov 2019 12:47:46 +0000</pubDate>
+        <link>http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/docker/2019/11/19/docker-layers-and-overlay-fs.html</guid>
+        
+        <category>docker</category>
+        
+        <category>layers</category>
+        
+        <category>practices</category>
         
         
         <category>docker</category>
@@ -235,129 +256,144 @@ common.txt  lower.txt
     
       <item>
         <title>How to write safe shell scripts</title>
-        <description>&lt;h4 id=&quot;shebang-&quot;&gt;Shebang (#!)&lt;/h4&gt;
+        <description>&lt;h2 id=&quot;good-practices-in-bash-scripts&quot;&gt;Good Practices in bash scripts&lt;/h2&gt;
+
+&lt;h3 id=&quot;shebang-&quot;&gt;Shebang (#!)&lt;/h3&gt;
 
 &lt;p&gt;It is called a shebang or a “bang” line. It is nothing but the absolute path to the Bash interpreter. It consists of a number sign and an exclamation point character (#!), followed by the full path to the interpreter such as /bin/bash. All scripts under Linux execute using the interpreter specified on a first line.
 This ensures that Bash will be used to interpret the script, even if it is executed under another shell.&lt;/p&gt;
 
-&lt;h4 id=&quot;set--e&quot;&gt;set -e&lt;/h4&gt;
+&lt;h3 id=&quot;set--e&quot;&gt;set -e&lt;/h3&gt;
 
 &lt;p&gt;this will make the shell script exit as soon as any line in the bash script fails.
-for example, a shell file like below will execute every line
-&lt;script src=&quot;https://gist.github.com/501d903a4db01b5bcbf4e59e7ecae7c2.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./set_e_without.sh 
-true
+for example, a shell file like below will execute every line&lt;/p&gt;
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/501d903a4db01b5bcbf4e59e7ecae7c2.js&quot;&gt; &lt;/script&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;arun@home:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./set_e_without.sh 
+&lt;span class=&quot;nb&quot;&gt;true
 true
 false
-true
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.
-&lt;script src=&quot;https://gist.github.com/9d841d3cc79224faf16f8fc602799372.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_e.sh 
-true
-true
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;if we don’t want the script to fail after certain failing statements, we can append these certain statements with || true.
-&lt;script src=&quot;https://gist.github.com/1531d5db9b2bd6f0b3aa98c7d73cd044.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_e_and_ignore_fail.sh           
-true
-true
-failing foo was ignored
-true
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h4 id=&quot;set--x&quot;&gt;set -x&lt;/h4&gt;
+&lt;p&gt;After adding set -e, it will stop executing after the line that fails, in this case the one that returns false.&lt;/p&gt;
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/9d841d3cc79224faf16f8fc602799372.js&quot;&gt; &lt;/script&gt;
 
-&lt;p&gt;this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like
-&lt;script src=&quot;https://gist.github.com/a9c92e43f02fd4c65514bb63fb05dce4.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_x.sh           
-++ true
-++ echo true
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;arun@home:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./with_set_e.sh 
+&lt;span class=&quot;nb&quot;&gt;true
+true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;ignore-failure-in-scripts&quot;&gt;Ignore failure in scripts&lt;/h3&gt;
+&lt;p&gt;if we don’t want the script to fail after certain failing statements, we can append these certain statements with || true.&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/1531d5db9b2bd6f0b3aa98c7d73cd044.js&quot;&gt; &lt;/script&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;arun@home:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./with_set_e_and_ignore_fail.sh           
+&lt;span class=&quot;nb&quot;&gt;true
 true
-++ true
-++ echo true
-true
-++ false
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/span&gt;failing foo was ignored
+&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h4 id=&quot;set--u&quot;&gt;set -u&lt;/h4&gt;
+&lt;h3 id=&quot;set--x&quot;&gt;set -x&lt;/h3&gt;
 
-&lt;p&gt;this option will force bash to treat unset variables as an error and exit immediately.
-&lt;script src=&quot;https://gist.github.com/a9b2414088f39537cbd6e168e9e716f6.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./without_set_u.sh 
-++ a=0
-++ echo 0
+&lt;p&gt;this will make the shell print each line before execution. Combining this with previous set statement and same example, it will look like&lt;/p&gt;
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/a9c92e43f02fd4c65514bb63fb05dce4.js&quot;&gt; &lt;/script&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;arun@home:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./with_set_x.sh           
+++ &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
+++ &lt;span class=&quot;nb&quot;&gt;echo true
+true&lt;/span&gt;
+++ &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
+++ &lt;span class=&quot;nb&quot;&gt;echo true
+true&lt;/span&gt;
+++ &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;set--u&quot;&gt;set -u&lt;/h3&gt;
+
+&lt;p&gt;The following example has variable &lt;em&gt;b&lt;/em&gt; which is not set. The run of the script will be successful.&lt;/p&gt;
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/a9b2414088f39537cbd6e168e9e716f6.js&quot;&gt; &lt;/script&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;arun@home:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./without_set_u.sh 
+++ &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
+++ &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;0
 0
-++ echo 0
+++ &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;0
 0
-++ echo
+++ &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt;
 
-++ echo 0
-0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+++ &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;0
+0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
+&lt;p&gt;But adding &lt;em&gt;-u&lt;/em&gt; to the same script will force bash to treat unset variables as an error and exit immediately.&lt;/p&gt;
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request&lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/ca24e436660a986cbd58d9b22f113ce2.js&quot;&gt; &lt;/script&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_set_u.sh 
-++ a=0
-++ echo 0
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;arun@home:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./with_set_u.sh 
+++ &lt;span class=&quot;nv&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
+++ &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;0
 0
-++ echo 0
+++ &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;0
 0
-./with_set_u.sh: line 5: b: unbound variable
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+./with_set_u.sh: line 5: b: unbound variable&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h4 id=&quot;set--o-pipefail&quot;&gt;set -o pipefail&lt;/h4&gt;
+&lt;h3 id=&quot;set--o-pipefail&quot;&gt;set -o pipefail&lt;/h3&gt;
 
 &lt;p&gt;bash usually looks at the exit code of the last command in a pipeline. This can cause a problem for -e option as it will only consider the leftmost command’s exit code in a pipeline.
 This particular option sets the exit code of pipeline commands to that of the rightmost command to exit with a non-zero status or 0 if all exit successfully.&lt;/p&gt;
 
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request&lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/5df45b0e6c32925c6ffd927c77b16900.js&quot;&gt; &lt;/script&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./without_pipefail.sh 
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;arun@home:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./without_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
-++ echo 'pipe chain failed'
+++ &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'pipe chain failed'&lt;/span&gt;
 pipe chain failed
-++ echo 'but I execute'
-but I execute
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+++ &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'but I execute'&lt;/span&gt;
+but I execute&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request&lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/c3016ad398b86686d737f042298aac80.js&quot;&gt; &lt;/script&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;arun@home:~$ ./with_pipefail.sh 
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;arun@home:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./with_pipefail.sh 
 ./test.sh: line 3: a: unbound variable
-++ echo 'pipe chain failed'
+++ &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'pipe chain failed'&lt;/span&gt;
 pipe chain failed
 
-arun@home:~$ echo $?
-1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+arun@home:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;
+1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;the echo $? is a special variable in bash that shows the exit code of last run command.&lt;/p&gt;
 
 </description>
-        <pubDate>Wed, 13 Nov 2019 21:22:57 +0530</pubDate>
-        <link>http://localhost:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html</link>
-        <guid isPermaLink="true">http://localhost:4000/shell/bash/script/2019/11/13/write-safe-shell-scripts.html</guid>
+        <pubDate>Wed, 13 Nov 2019 15:52:57 +0000</pubDate>
+        <link>http://0.0.0.0:4000/script/bash/2019/11/13/write-safe-shell-scripts.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/script/bash/2019/11/13/write-safe-shell-scripts.html</guid>
         
-        
-        <category>shell</category>
+        <category>script</category>
         
         <category>bash</category>
         
+        
         <category>script</category>
+        
+        <category>bash</category>
         
       </item>
     
       <item>
         <title>How to remove file in linux using regex</title>
-        <description>&lt;h4 id=&quot;deleting-older-files-with-names-usually-having-date-as-prefixsuffix&quot;&gt;Deleting older files with names usually having date as prefix/suffix&lt;/h4&gt;
+        <description>&lt;h2 id=&quot;deleting-older-files-within-a-date-range&quot;&gt;Deleting older files within a date range&lt;/h2&gt;
 
 &lt;p&gt;Generally compressed log files created by utilities contain a date in the filename.
 For cleaning such accumulated compressed files we can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rm&lt;/code&gt; command with regex.&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls
 
-2013-12-23-nginx.tar.gz                2016-04-29-nginx.tar.gz
+&lt;/span&gt;2013-12-23-nginx.tar.gz                2016-04-29-nginx.tar.gz
 2013-12-24-nginx.tar.gz                2016-05-21-nginx.tar.gz
 2016-04-19-nginx.tar.gz                2016-05-22-nginx.tar.gz
 2016-04-20-nginx.tar.gz                2016-05-23-nginx.tar.gz
@@ -369,20 +405,27 @@ For cleaning such accumulated compressed files we can use &lt;code class=&quot;l
 2016-04-26-nginx.tar.gz                2016-12-24-nginx.tar.gz
 2016-04-27-nginx.tar.gz                2019-07-20-nginx.tar.gz
 2016-04-28-nginx.tar.gz
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ rm 201[3-6]*&lt;/code&gt;&lt;/p&gt;
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;rm &lt;/span&gt;201[3-6]&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 </description>
-        <pubDate>Sat, 20 Jul 2019 04:50:00 +0530</pubDate>
-        <link>http://localhost:4000/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html</link>
-        <guid isPermaLink="true">http://localhost:4000/linux/regex/script/2019/07/20/how-to-remove-files-using-regex.html</guid>
-        
+        <pubDate>Fri, 19 Jul 2019 23:20:00 +0000</pubDate>
+        <link>http://0.0.0.0:4000/regex/2019/07/19/how-to-remove-files-using-regex.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/regex/2019/07/19/how-to-remove-files-using-regex.html</guid>
         
         <category>linux</category>
         
-        <category>regex</category>
+        <category>bash</category>
         
         <category>script</category>
+        
+        <category>scripting</category>
+        
+        <category>regex</category>
+        
+        
+        <category>regex</category>
         
       </item>
     

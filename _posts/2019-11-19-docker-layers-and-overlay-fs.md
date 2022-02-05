@@ -3,9 +3,11 @@ layout: post
 title: "Understanding docker layers and overlay filesystem"
 date:  2019-11-19 12:47:46
 categories: docker
+tags: docker layers practices
+image: /assets/article_images/2019-11-19-docker-layers-and-overlay-fs/docker1.jpg
 ---
 
-
+## What are docker layers and overlay filesystems
 This was one of the things that I wanted to understand better - What exactly is an overlay file system and how is docker using it.
 From archlinux wiki definition
 "Overlayfs allows one, usually read-write, directory tree to be overlaid onto another, read-only directory tree. All modifications go to the upper, writable layer."
@@ -13,6 +15,8 @@ From archlinux wiki definition
 An apt example is a linux live CD. 
 
 Lets get down to how this overlay file system works
+
+### Overlays and docker
 
 It consists of three layers for the sake of simplicity.
 
@@ -42,7 +46,7 @@ Whenever a file already present in lower layer is modified, the file is first co
 #### Overlay in action
 
 Lets create directories 
-```
+{% highlight sh %}
 root@dd4a4d50aefc:~# mkdir lower upper merged workdir
 root@dd4a4d50aefc:~# echo "I am in lower layer" > lower/lower.txt
 root@dd4a4d50aefc:~# echo "I am in upper layer" > upper/upper.txt
@@ -57,19 +61,19 @@ root@dd4a4d50aefc:~# ls lower/
 common.txt  lower.txt
 root@dd4a4d50aefc:~# ls upper/
 common.txt  upper.txt
+{% endhighlight %}
 
-```
 The lower layer can be read-only and an overlay itself, while the upper layer is normally writeable. In order to create an overlay of two directories, dir1 and dir2, we can use the following mount command:
 
-```
+{% highlight sh %}
 root@dd4a4d50aefc:~# sudo mount -t overlay overlay -o lowerdir=/root/lower2:/root/lower1,upperdir=/root/upper,workdir=/root/workdir /root/merged
+{% endhighlight %}
 
-```
 while specifying multiple lower layers, they are separated by a :, with the rightmost lower directory on the bottom, and the leftmost lower directory on the top of the overlay.
 
 #### New file creation in overlay
 
-```
+{% highlight sh %}
 root@dd4a4d50aefc:~# echo "I am the new file on the block" > merged/new.txt
 root@dd4a4d50aefc:~# ls merged/
 common.txt  lower.txt  new.txt  upper.txt
@@ -77,7 +81,7 @@ root@dd4a4d50aefc:~# ls upper/
 common.txt  new.txt  upper.txt
 root@dd4a4d50aefc:~# ls lower/
 common.txt  lower.txt
-```
+{% endhighlight %}
 
 References 
 - https://docs.docker.com/storage/storagedriver/#images-and-layers

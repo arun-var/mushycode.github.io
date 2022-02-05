@@ -2,37 +2,43 @@
 layout: post
 title: "Commonly used Elasticsearch REST APIs at work"
 date:  2020-05-13 13:13:55
-categories: [elasticsearch, rest]
+tags: elasticsearch rest commands
+categories: elasticsearch
+image: /assets/article_images/2020-05-13-useful-elasticsearch-rest-apis/elasticsearch.jpg
 ---
 
-This is a simple post listing the most used Elasticsearch rest APIs at work for my reference and maybe others.
+## Helpful Elasticsearch APIs
 
+This is a simple post listing the Elasticsearch rest APIs that I use most at work.
 
-```
+### List all indices
+{% highlight sh %}
 curl "localhost:9200/_cat/indices"
-```
+{% endhighlight %}
 
-```
+### List all shards
+{% highlight sh %}
 curl "localhost:9200/_cat/shards"
-```
+{% endhighlight %}
 
-```
+### List all elasticserach nodes
+{% highlight sh %}
 curl "localhost:9200/_nodes?pretty"
-```
+{% endhighlight %}
 
-```
+{% highlight sh %}
 curl "localhost:9200/_cluster/allocation/explain?pretty"
-```
+{% endhighlight %}
 
-```
+{% highlight sh %}
 curl -s 'localhost:9200/_cat/allocation?v'
-```
+{% endhighlight %}
 
-```
+{% highlight sh %}
 curl -XPOST localhost:9200/_cluster/reroute?retry_failed=true
-```
+{% endhighlight %}
 
-```
+{% highlight sh %}
 curl -X POST localhost:9200/_reindex \
 -H 'cache-control: no-cache' \
 -H 'content-type: application/json' \
@@ -47,9 +53,9 @@ curl -X POST localhost:9200/_reindex \
     "index": "<<new_index_with_new_mapping>>"
   }
 }'
-```
+{% endhighlight %}
 
-```
+{% highlight sh %}
 curl -X POST localhost:9200/_reindex \
 -H 'cache-control: no-cache' \
 -H 'content-type: application/json' \
@@ -67,9 +73,9 @@ curl -X POST localhost:9200/_reindex \
     "index": "<<new_index_with_new_mapping>>"
   }
 }'
-```
+{% endhighlight %}
 
-```
+{% highlight sh %}
 curl -X POST "localhost:9200/<index_name>/_search?pretty" -H 'Content-Type: application/json' -d'
 {
   "query": {
@@ -79,9 +85,9 @@ curl -X POST "localhost:9200/<index_name>/_search?pretty" -H 'Content-Type: appl
   }
 }
 '
-```
+{% endhighlight %}
 
-```
+{% highlight sh %}
 curl -X POST "localhost:9200/<index_name>/_delete_by_query?pretty" -H 'Content-Type: application/json' -d'
 {
   "query": {
@@ -91,6 +97,6 @@ curl -X POST "localhost:9200/<index_name>/_delete_by_query?pretty" -H 'Content-T
   }
 }
 '
-```
+{% endhighlight %}
 
 PS: I will add description for each soon

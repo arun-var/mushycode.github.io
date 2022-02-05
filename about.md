@@ -4,6 +4,5 @@ title: About
 permalink: /about/
 ---
 
-I'm a Full stack developer turned Devops Engineer.
-
-email: arunvarghese88@gmail.com
+Full stack developer turned Automation/DevOps Engineer, I have hands-on experience in supporting, automating, monitoring and optimizing mission critical deployments and infrastructure - leveraging configuration management, CI/CD, and DevOps processes.
+I now find love in troubleshooting/debugging issues, finding performance bottlenecks and improving build release time. Self Motivated, self-starter and a technology enthusiast. I gorge on blogs/articles on technology and football. 

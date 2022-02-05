@@ -1,10 +1,16 @@
 ---
 layout: post
-title: "Fixing Sectigo's Expired Certificates"
+title: "Lessons from Sectigo's Expired Certificates"
 date:  2020-05-30 20:43:52
-categories: [nginx, ssl, certificate]
+categories: ssl
+tags: ssl issues sectigo certificates expiry
+image: /assets/article_images/2020-05-30-fix-sectigo-expired-cert/ssl.JPG
 ---
 
+## Lessons from Sectigo's Expired Certificates - Why it is important to validate SSL certificate chain and not just root SSL certificate in monitoring systems
+<br />
+
+### How it all started today?
 Today we noticed that in some of our applications connection to our internal API's are failing with the following error messages -
 ```
 RestClient::SSLCertificateNotVerified (SSL_connect returned=1 errno=0 state=error: certificate verify failed)
@@ -18,6 +24,7 @@ SSL_shutdown() failed (SSL: error:140E0197:SSL routines:SSL_shutdown:shutdown wh
 API's health check from browser did not show any issue, all seemed fine. Infact, the SSL certificate was not expiring before 2021. So what was causing this issue? Upon further investigation it was found that one of the intermediate certificate in the certificate chain has expired!
 Sectigo's External CA root expired and thus our certifactes had issues.
 
+### How did we fix it?
 The fix was to update our full certificate file with the new roots. In our case, it looked like the following -
 
 ```

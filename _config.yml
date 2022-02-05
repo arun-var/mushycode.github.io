@@ -1,58 +1,65 @@
-title: Posts...
-description: My Posts
-author: Arun Varghese
-github: https://github.com/mushycode
-about: I'm a Full stack turned Devops Engineer
-disqus_shortname: mushycode
-google_analytics: UA-150479150-Y
-
-enableTags: true
-tagarray: []
-future: true
-
-collections:
-  project:
-    output: true
-    permalink: /project/:path/
-
-social:
-    - icon: fa-facebook
-      link: "#"
-    - icon: fa-twitter
-      link: "#"
-    - icon: fa-linkedin
-      link: "#"
-    - icon: fa-stack-exchange
-      link: "#"
-    - icon: fa-github
-      link: "https://github.com/mushycode"
-
-share:
-  twitter_username: github.io
-  fb_appid: 1749788565247320
-
-urls:
-    - text: About Me
-      url: /about/
-    - text: My Projects
-      url: /projects/
-    - text: XML Feed
-      url: /feed.xml
-
-url: "https://mushycode.github.io"
-baseurl: ""
-paginate: 20
-per_page: 20
-paginate_path: "/page/:num/"
-markdown: kramdown
+# Build settings
 plugins:
-  - jekyll-sitemap
+  - jemoji
   - jekyll-paginate
   - jekyll-gist
 
-compress_html:
-  clippings: all
-  comments: ["<!-- ", " -->"]
-  endings: all
-  ignore:
-    envs: ['development']
+
+# Site settings
+title: "Mushycode"
+description: > # this means to ignore newlines until "email:"
+   My thoughtsdump and playground
+
+email: arunvarghese88@gmail.com
+#blog logo
+logo: "/assets/images/av.svg"
+float_logo: true # true, false (default)
+
+# blog cover
+cover: "/assets/images/idea-2924175.png"
+
+name: 'Arun Varghese'
+author: 'Arun Varghese'
+author_image: "/assets/images/author.jpg"
+
+paginate:	5
+
+url: "https://mushycode.github.io" # the base hostname & protocol for your site
+baseurl: ""
+#used to display twitter cards
+twitter_handle: '@mushyinks'
+
+#fill in disqus shortname to use disqus
+disqus: mushycode
+
+google_analytics: UA-150479150-Y
+
+# social icons and sharing options
+social:
+  - icon:	twitter
+    url:	https://twitter.com/mushyinks
+    desc: Follow me on twitter
+    share_url: http://twitter.com/share
+    share_title: ?text=
+    share_link: "&amp;url="
+
+#  - icon:	facebook
+#    url:	https://facebook.com/???
+#    desc: Connect with me facebook
+#    share_url: https://www.facebook.com/sharer.php
+#    share_title: ?t=
+#    share_link: "&amp;u="
+
+  - icon:	github
+    url:	https://github.com/mushycode
+    desc:	Fork me on github
+    share_url:
+    share_title:
+    share_link:
+
+#  - icon:	google-plus
+#    url:	https://google.com/???
+#    desc:	Add me on google+
+#    share_url:
+#    share_title:
+#    share_link:
