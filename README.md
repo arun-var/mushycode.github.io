@@ -1,5 +1,4 @@
 
-This blog has been modified from [this repository](https://github.com/dirkfabisch/mediator)
 Getting Started
 ---
 - [Clone this repository](https://github.com/mushycode/mushycode.github.io.git)
@@ -7,4 +6,6 @@ Getting Started
 - Install the requried gems ([GitHub Pages](https://github.com/github/pages-gem), [Bourbon](https://github.com/thoughtbot/bourbon) and [Jekyll](https://github.com/jekyll/jekyll), [Jemoji](https://github.com/jekyll/jemoji)): `bundle install`
 - Run the jekyll server: `bundle exec jekyll serve --host=0.0.0.0`
 - Access the blog on your browser at `http://localhost:4000`
+
+This blog has been modified from [this repository](https://github.com/dirkfabisch/mediator)
 
