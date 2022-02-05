@@ -1,5 +1,5 @@
 
-This blog is has been modified from [this repository](https://github.com/dirkfabisch/mediator)
+This blog has been modified from [this repository](https://github.com/dirkfabisch/mediator)
 Getting Started
 ---
 - [Clone this repository](https://github.com/mushycode/mushycode.github.io.git)
