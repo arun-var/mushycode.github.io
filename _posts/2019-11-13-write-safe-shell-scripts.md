@@ -5,6 +5,7 @@ date:  2019-11-13 15:52:57
 categories: script bash
 tags: script bash
 image: /assets/article_images/2019-11-13-write-safe-shell-scripts/terminal.jpg
+description: How to write safe shell scripts - Some Good Practices
 ---
 ## Good Practices in bash scripts
 
@@ -12,7 +13,7 @@ image: /assets/article_images/2019-11-13-write-safe-shell-scripts/terminal.jpg
 ### Shebang (#!)
 
 It is called a shebang or a "bang" line. It is nothing but the absolute path to the Bash interpreter. It consists of a number sign and an exclamation point character (#!), followed by the full path to the interpreter such as /bin/bash. All scripts under Linux execute using the interpreter specified on a first line.
-This ensures that Bash will be used to interpret the script, even if it is executed under another shell.
+This ensures that the correct interpreter will be used to interpret the script, even if it is executed under another shell.
 
 ### set -e
 
