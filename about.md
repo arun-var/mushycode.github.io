@@ -2,6 +2,7 @@
 layout: page
 title: About
 permalink: /about/
+tags: DevOps Engineer Full stack Engineer Automation CI/CD Kubernetes Ansible Docker AWS Cloud Native Apps Jenkins Argocd Gocd Helm
 ---
 
 Full stack developer turned Automation/DevOps Engineer, I have hands-on experience in supporting, automating, monitoring and optimizing mission critical deployments and infrastructure - leveraging configuration management, CI/CD, and DevOps processes.
