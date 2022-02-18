@@ -7,7 +7,7 @@ plugins:
 
 # Site settings
 title: "Mushycode"
-description: > # this means to ignore newlines until "email:"
+sub-title: > # this means to ignore newlines until "email:"
    My thoughtsdump and playground
 
 email: arunvarghese88@gmail.com
@@ -32,7 +32,7 @@ twitter_handle: '@mushyinks'
 #fill in disqus shortname to use disqus
 disqus: mushycode
 
-google_analytics: UA-150479150-Y
+google_analytics: UA-150479150-1
 
 # social icons and sharing options
 social:
