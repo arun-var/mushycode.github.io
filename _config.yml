@@ -7,8 +7,10 @@ plugins:
 
 # Site settings
 title: "Mushycode"
-sub-title: > # this means to ignore newlines until "email:"
+description: > # this means to ignore newlines until "email:"
    My thoughtsdump and playground
+
+permalink: /:slug:output_ext
 
 email: arunvarghese88@gmail.com
 #blog logo

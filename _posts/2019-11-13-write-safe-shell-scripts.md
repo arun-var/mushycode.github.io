@@ -5,7 +5,7 @@ date:  2019-11-13 15:52:57
 categories: script bash
 tags: script bash
 image: /assets/article_images/2019-11-13-write-safe-shell-scripts/terminal.jpg
-description: How to write safe shell scripts - Some Good Practices
+description: Bash script best practices - How to write safe shell scripts
 ---
 ## Good Practices in bash scripts
 

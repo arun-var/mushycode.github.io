@@ -5,9 +5,11 @@ date:  2019-11-19 12:47:46
 categories: docker
 tags: docker layers practices
 image: /assets/article_images/2019-11-19-docker-layers-and-overlay-fs/docker1.jpg
+description: Docker layers explained - A docker image consists of layers. Each layer is an instruction in the Dockerfile. A container is an image with a writable(or readable) layer or top of other read only layers. This is where an overlayfs comes in to picture.
 ---
 
 ## What are docker layers and overlay filesystems
+A docker image consists of layers. Each layer is an instruction in the Dockerfile. A container is an image with a writable(or readable) layer or top of other read only layers. This is where an overlayfs comes in to picture.
 This was one of the things that I wanted to understand better - What exactly is an overlay file system and how is docker using it.
 From archlinux wiki definition
 "Overlayfs allows one, usually read-write, directory tree to be overlaid onto another, read-only directory tree. All modifications go to the upper, writable layer."
