@@ -2,7 +2,7 @@
 layout: post
 title:  "How to remove file in linux using regex"
 date:   2019-07-20 06:20:00 +0700
-tags: linux bash script scripting regex
+tags: linux bash script regex
 categories: regex
 image: /assets/article_images/2019-08-11-how-to-remove-files-using-regex/files.jpg
 ---

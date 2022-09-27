@@ -2,7 +2,7 @@
 layout: post
 title: "Commonly used Elasticsearch REST APIs at work"
 date:  2020-05-13 13:13:55
-tags: elasticsearch rest commands
+tags: elasticsearch rest-api
 categories: elasticsearch
 image: /assets/article_images/2020-05-13-useful-elasticsearch-rest-apis/elasticsearch.jpg
 ---

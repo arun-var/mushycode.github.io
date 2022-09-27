@@ -3,7 +3,7 @@ layout: post
 title: "Lessons from Sectigo's Expired Certificates"
 date:  2020-05-30 20:43:52
 categories: ssl
-tags: ssl issues sectigo certificates expiry
+tags: ssl issues sectigo certificates ssl-expiry
 image: /assets/article_images/2020-05-30-fix-sectigo-expired-cert/ssl.JPG
 ---
 

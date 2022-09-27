@@ -3,7 +3,7 @@ layout: post
 title: "How to write safe shell scripts"
 date:  2019-11-13 15:52:57
 categories: script bash
-tags: script bash
+tags: script bash best-practices
 image: /assets/article_images/2019-11-13-write-safe-shell-scripts/terminal.jpg
 description: Bash script best practices - How to write safe shell scripts
 ---
