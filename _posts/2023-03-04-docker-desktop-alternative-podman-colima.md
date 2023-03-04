@@ -5,7 +5,7 @@ description: "Alternatives for Docker Desktop Enterprise Users Pros and Cons of 
 categories: docker docker-desktop mac
 tags: docker docker-desktop mac colima podman
 ---
-# Docker Desktop Alternatives
+# Docker Desktop Alternatives for Enterprise Users
 
 Docker has changed its [Service Agreement](https://www.docker.com/pricing/) and requires a paid subscription for Docker Desktop. It is a popular tool used by many developers to manage containers on their Mac. However, some users may want to explore alternatives to Docker Desktop / Docker for various reasons, such as performance issues or the desire for daemonless docker. Two possible alternatives to Docker Desktop on a Mac are [Podman](https://podman.io/) and [Colima](https://github.com/abiosoft/colima). In this blog, I just wanted to quickly document my experience on try out these two alternatives as well as the pros and cons of each.
 
