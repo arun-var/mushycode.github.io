@@ -1,7 +1,7 @@
 ---
 layout: post
-title: docker-desktop-alternative-podman-colima
-description: Alternatives for Docker Desktop Enterprise Users Pros and Cons of Podman and Colima
+title: Podman and Colima as docker desktop alternatives for enterprise users
+description: "Alternatives for Docker Desktop Enterprise Users Pros and Cons of Podman and Colima"
 categories: docker docker-desktop mac
 tags: docker docker-desktop mac colima podman
 ---
